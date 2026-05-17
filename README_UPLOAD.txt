@@ -1,0 +1,1 @@
+ROLLING WRENCH AI EXACT HOME V1\n\nUpload these files to GitHub Pages root. Backend/Docker stays separate. Scanner tile is ready for ws://localhost:8000/ws/j1939.\n

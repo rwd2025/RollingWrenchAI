@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RW AI">
+<title>Rolling Wrench AI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="phone">
+<main id="home" class="screen active">
+<header class="top">
+<button class="topBtn" onclick="openPanel('menu')">☰</button>
+<button class="topBtn" onclick="goHome()">←</button>
+<div class="brand"><div class="brandTitle"><span>ROLLING</span> WRENCH AI</div><div class="brandSub">DIESEL DIAGNOSTICS & REPAIR PLATFORM</div></div>
+<button class="topBtn settingsBtn" onclick="openPanel('settings')">⚙</button>
+</header>
+
+<section class="activeTruck">
+<div class="left"><span class="dot"></span><b>ACTIVE TRUCK</b><i></i><strong id="truckEngineBar">CUMMINS X15</strong><i></i><strong id="truckVinBar">VIN: 1XP4D49X8KD123456</strong></div>
+<div class="connected">🔗 CONNECTED</div>
+</section>
+
+<section class="aiBar" onclick="openPanel('master')">
+<div class="rwBadge">RW</div>
+<div class="aiText"><b>Ask Rolling Wrench AI...</b><span>VIN, part number, fault code, symptom, repair, quote note...</span></div>
+<button onclick="event.stopPropagation(); voiceShell()">🎙</button>
+<button onclick="event.stopPropagation(); openPanel('master')">☷</button>
+<button onclick="event.stopPropagation(); openCamera()">📷</button>
+</section>
+
+<section class="truckCard">
+<div class="truckPic"></div>
+<div class="truckInfo">
+<div class="truckHead"><h1 id="truckName">2020 Freightliner Cascadia</h1><button onclick="openPanel('vin')">SCAN / CHANGE TRUCK</button></div>
+<div class="specGrid">
+<div><span>VIN</span><b id="vinSpec">1XP4D49X8KD123456</b></div><div><span>ENGINE</span><b id="engineSpec">CUMMINS X15</b></div><div><span>ESN</span><b id="esnSpec">79876562</b></div>
+<div><span>CPL</span><b id="cplSpec">4342</b></div><div><span>EPA FAMILY</span><b id="epaSpec">LCEXH0912XAP</b></div><div><span>ODOMETER</span><b id="odoSpec">453,213 MI</b></div>
+<div><span>HOURS</span><b id="hoursSpec">8,912 HRS</b></div>
+</div>
+</div>
+</section>
+
+<section class="masterSearch">
+<div class="searchIcon">⌕</div>
+<div class="masterInner"><div class="sectionTitle">MASTER SEARCH</div>
+<div class="chips">
+<button onclick="openPanel('vin')">▥ VIN</button><button onclick="openPanel('parts')">⚙ PART #</button><button onclick="openPanel('doctor')" class="hot">▰ SPN / FMI</button>
+<button onclick="openPanel('doctor')">🩺 SYMPTOM</button><button onclick="openPanel('repair')">🔧 REPAIR</button><button onclick="openPanel('quote')">▤ QUOTE NOTE</button>
+</div></div>
+</section>
+
+<section class="tiles primary">
+<button class="tile" onclick="openPanel('vin')"><div class="tileIcon">🚛🔍</div><h3>VIN LOOKUP</h3><p>Decode VIN, ESN, CPL, specs & info</p></button>
+<button class="tile" onclick="openPanel('parts')"><div class="tileIcon">⚙📦</div><h3>OEM PARTS</h3><p>OEM parts lookup, interchange & kits</p></button>
+<button class="tile" onclick="openPanel('doctor')"><div class="tileIcon">🫀</div><h3>DIESEL DOCTOR</h3><p>Fault code lookup, SPN, FMI, diagnostics</p></button>
+<button class="tile" onclick="openPanel('repair')"><div class="tileIcon">🧠</div><h3>REPAIR BRAIN</h3><p>AI repair assistant & troubleshooting</p></button>
+</section>
+
+<section class="tiles secondary">
+<button class="smallTile" onclick="openPanel('quote')"><div>🧾💵</div><h3>SMART QUOTES</h3><p>Build quotes, parts, labor & markup</p></button>
+<button class="smallTile" onclick="openPanel('clock')"><div>⏱</div><h3>JOB CLOCK</h3><p>Track time, jobs & labor</p></button>
+<button class="smallTile" onclick="openPanel('vision')"><div>📷</div><h3>VISION / OCR</h3><p>Scan codes, parts, documents, labels</p></button>
+<button class="smallTile" onclick="openPanel('manuals')"><div>📖</div><h3>SERVICE MANUALS</h3><p>OEM manuals & procedures</p></button>
+<button class="smallTile" onclick="openPanel('gps')"><div>📍</div><h3>DOT / GPS</h3><p>GPS, routes, ELD, logs & location</p></button>
+<button class="smallTile" onclick="openPanel('memory')"><div>💼</div><h3>REPAIR MEMORY</h3><p>Saved repairs, history & notes</p></button>
+</section>
+
+<section class="statusBox">
+<div class="statusMain"><b>SYSTEM STATUS</b><span>〽</span><p>All systems<br>operational</p></div>
+<div class="statusTile"><div>🚛⚙</div><b>OEM GATEWAY</b><span>CONNECTED</span></div><div class="statusTile"><div>🧠</div><b>AI SYSTEM</b><span>ONLINE</span></div><div class="statusTile"><div>☁⬆</div><b>SUPABASE SYNC</b><span>SYNCED</span></div><div class="statusTile"><div>💼</div><b>REPAIR MEMORY</b><span>ACTIVE</span></div><div class="statusTile scanner" onclick="openPanel('scanner')"><div>📟</div><b>SCANNER</b><span>CONNECTED</span></div><div class="statusTile"><div>⌁</div><b>OFFLINE MODE</b><span>READY</span></div>
+</section>
+</main>
+
+<main id="panel" class="screen">
+<header class="panelHead"><button class="topBtn" onclick="goHome()">←</button><h2 id="panelTitle">MODULE</h2><button class="topBtn" onclick="goHome()">✕</button></header>
+<section id="panelBody" class="panelBody"></section>
+</main>
+
+<nav class="dock">
+<button onclick="goHome()" class="active">🏠<span>HOME</span></button><button onclick="openPanel('doctor')">🩺<span>DOCTOR</span></button><button onclick="openPanel('parts')">⚙<span>PARTS</span></button><button onclick="openPanel('repair')">🔧<span>REPAIR</span></button><button onclick="openPanel('more')">•••<span>MORE</span></button>
+</nav>
+</div>
+<input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+<script src="app.js"></script>
+</body>
+</html>
