@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Rolling Wrench AI",
+    "slug": "rolling-wrench-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#050607"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
