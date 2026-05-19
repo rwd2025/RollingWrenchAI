@@ -1,766 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#020408">
-  <title>Rolling Wrench AI</title>
-  <style>
-    /* ==========================================================================
-       1. GLOBAL DESIGN ARCHITECTURE & CSS RESET
-       ========================================================================== */
-    :root {
-      --bg-matte-black: #020408;      /* Absolute pitch black layout base */
-      --bg-navy-container: #080f1e;   /* Tactical card deep background */
-      --bg-subsurface-fill: #0b1426;  /* Input element foundations */
-      --border-neon-glow: #1b2e4c;    /* High-tech bounding edges */
-      
-      --color-orange-neon: #ff7a00;   /* Brand typography core tone */
-      --color-orange-sub: #f87171;    /* System structural neon highlight */
-      --color-green-success: #10b981; /* Metric connection indicator color */
-      
-      --text-main-bright: #ffffff;
-      --text-muted-slate: #94a3b8;
-      --text-dark-charcoal: #475569;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    body {
-      background-color: var(--bg-matte-black);
-      color: var(--text-main-bright);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow: hidden;
-      height: 100vh;
-    }
-
-    /* Container constraints matching standard smartphone layouts */
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-      max-width: 440px; 
-      margin: 0 auto;
-      position: relative;
-      background-color: var(--bg-matte-black);
-    }
-
-    .viewport {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding-bottom: calc(64px + env(safe-area-inset-bottom, 12px));
-    }
-    .viewport::-webkit-scrollbar { display: none; }
-
-    button {
-      border: none;
-      background: none;
-      color: inherit;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform 0.08s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    button:active {
-      transform: scale(0.97);
-      opacity: 0.9;
-    }
-
-    /* Embedded lighting inner-glow styles */
-    .ai-input-module,
-    .vehicle-profile-card,
-    .feature-block-item,
-    .utility-block-item,
-    .hardware-telemetry-module {
-      box-shadow: 
-        0 4px 20px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.02);
-    }
-
-    /* ==========================================================================
-       2. APP HEADER & ACTIVE CONTEXT SYSTEM
-       ========================================================================== */
-    .app-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      padding-top: calc(8px + env(safe-area-inset-top, 0px));
-      background-color: var(--bg-matte-black);
-      border-bottom: 1px solid var(--border-neon-glow);
-    }
-
-    .header-left {
-      display: flex;
-      gap: 10px;
-    }
-
-    .nav-btn {
-      color: var(--text-muted-slate);
-      background: var(--bg-navy-container);
-      border: 1px solid var(--border-neon-glow);
-      width: 34px;
-      height: 34px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-btn svg { width: 16px; height: 16px; fill: currentColor; }
-
-    .header-brand {
-      text-align: center;
-    }
-
-    .header-brand h1 {
-      font-weight: 900;
-      font-size: 1.15rem;
-      letter-spacing: 0.02em;
-    }
-
-    .text-orange { color: var(--color-orange-neon); }
-
-    .header-brand .subtitle {
-      font-size: 0.52rem;
-      letter-spacing: 0.08em;
-      color: var(--text-muted-slate);
-      font-weight: 600;
-      margin-top: 1px;
-    }
-
-    .status-ribbon {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #04070f;
-      border-bottom: 1px solid var(--border-neon-glow);
-      padding: 5px 12px;
-      font-size: 0.62rem;
-      font-weight: 700;
-      color: var(--text-muted-slate);
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .indicator-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-    }
-    .dot-green {
-      background-color: var(--color-green-success);
-      box-shadow: 0 0 6px var(--color-green-success);
-    }
-
-    .font-highlight { color: var(--text-main-bright); }
-    .connection-state { color: var(--color-green-success); font-weight: 800; }
-
-    /* ==========================================================================
-       3. INPUT BARS & VEHICLE PROFILE MATRICES
-       ========================================================================== */
-    .ai-input-module {
-      background-color: var(--bg-navy-container);
-      border: 1px solid rgba(248, 113, 113, 0.45);
-      box-shadow: 0 0 12px rgba(248, 113, 113, 0.08) !important;
-      border-radius: 20px;
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      height: 48px;
-    }
-
-    .ai-avatar {
-      background-color: rgba(248, 113, 113, 0.1);
-      border: 1px solid var(--color-orange-sub);
-      color: var(--color-orange-sub);
-      font-size: 0.7rem;
-      font-weight: 900;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .ai-text-group {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .ai-title {
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--text-muted-slate);
-    }
-
-    .ai-sub {
-      font-size: 0.58rem;
-      color: var(--text-dark-charcoal);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 220px;
-    }
-
-    .ai-actions {
-      display: flex;
-      gap: 10px;
-      color: var(--text-muted-slate);
-    }
-    .ai-actions svg { width: 14px; height: 14px; fill: currentColor; }
-
-    /* Vehicle Detail Panel Configuration */
-    .vehicle-profile-card {
-      background-color: var(--bg-navy-container);
-      border: 1px solid var(--border-neon-glow);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .vehicle-art-bay {
-      width: 72px;
-      background-color: #03050a;
-      border-radius: 6px;
-      border: 1px solid var(--border-neon-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .vehicle-art-bay svg { width: 56px; height: auto; fill: var(--text-muted-slate); opacity: 0.85; }
-
-    .vehicle-spec-pane { flex: 1; }
-
-    .pane-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 6px;
-    }
-
-    .pane-header h2 {
-      font-size: 0.85rem;
-      font-weight: 800;
-    }
-
-    .action-tag-btn {
-      font-size: 0.54rem;
-      font-weight: 800;
-      border: 1px solid var(--color-orange-neon);
-      color: var(--color-orange-neon);
-      padding: 2px 5px;
-      border-radius: 4px;
-    }
-
-    .spec-matrix-sheet {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px 6px;
-      border-top: 1px solid rgba(27, 46, 76, 0.4);
-      padding-top: 5px;
-    }
-
-    .spec-cell { display: flex; flex-direction: column; }
-    .spec-cell label {
-      font-size: 0.52rem;
-      color: var(--text-dark-charcoal);
-      font-weight: 800;
-    }
-    .spec-cell span {
-      font-size: 0.62rem;
-      font-weight: 600;
-      color: var(--text-muted-slate);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ==========================================================================
-       4. FILTER TAG ENGINE
-       ========================================================================== */
-    .search-filter-module {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .module-title {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: var(--text-muted-slate);
-      letter-spacing: 0.04em;
-    }
-    .module-title svg { width: 10px; height: 10px; fill: currentColor; }
-
-    .filter-scroll-row {
-      display: flex;
-      gap: 5px;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    .filter-scroll-row::-webkit-scrollbar { display: none; }
-
-    .filter-tab {
-      background-color: var(--bg-subsurface-fill);
-      border: 1px solid var(--border-neon-glow);
-      padding: 4px 9px;
-      border-radius: 5px;
-      font-size: 0.62rem;
-      font-weight: 700;
-      color: var(--text-muted-slate);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .filter-tab svg { width: 10px; height: 10px; fill: currentColor; }
-    
-    .filter-tab.active {
-      background-color: rgba(27, 46, 76, 0.35);
-      border-color: #3b82f6;
-      color: var(--text-main-bright);
-    }
-
-    /* ==========================================================================
-       5. FEATURE LAYOUT GRIDS (Primary & Secondary Modules)
-       ========================================================================== */
-    .primary-feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-    }
-
-    .feature-block-item {
-      background-color: var(--bg-navy-container);
-      border: 1px solid var(--border-neon-glow);
-      border-radius: 8px;
-      padding: 12px 8px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .block-visual {
-      margin-bottom: 4px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .block-visual svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; }
-
-    .feature-block-item h3 {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.01em;
-      margin-bottom: 1px;
-    }
-
-    .feature-block-item p {
-      font-size: 0.56rem;
-      color: var(--text-muted-slate);
-      line-height: 1.2;
-    }
-
-    .secondary-feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-    }
-
-    .utility-block-item {
-      background-color: var(--bg-navy-container);
-      border: 1px solid rgba(27, 46, 76, 0.4);
-      border-radius: 6px;
-      padding: 8px 4px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .util-icon {
-      margin-bottom: 3px;
-      display: flex;
-      align-items: center;
-    }
-    .util-icon svg { width: 14px; height: 14px; fill: none; stroke: var(--text-muted-slate); stroke-width: 2; }
-
-    .utility-block-item h4 {
-      font-size: 0.55rem;
-      font-weight: 800;
-      color: var(--text-main-bright);
-      white-space: nowrap;
-    }
-
-    .utility-block-item p {
-      font-size: 0.46rem;
-      color: var(--text-dark-charcoal);
-      line-height: 1.1;
-      margin-top: 1px;
-    }
-
-    /* ==========================================================================
-       6. TELEMETRY STATUS MONITOR PANELS
-       ========================================================================== */
-    .hardware-telemetry-module {
-      background-color: #03050a;
-      border: 1px solid var(--border-neon-glow);
-      border-radius: 6px;
-      padding: 8px;
-    }
-
-    .telemetry-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.54rem;
-      font-weight: 800;
-      color: var(--text-dark-charcoal);
-      margin-bottom: 6px;
-      border-bottom: 1px dashed var(--border-neon-glow);
-      padding-bottom: 3px;
-    }
-
-    .status-pulse-label { color: var(--color-green-success); }
-
-    .telemetry-node-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 3px;
-    }
-
-    .node-cell {
-      background-color: rgba(11, 20, 38, 0.2);
-      border: 1px solid rgba(27, 46, 76, 0.2);
-      border-radius: 4px;
-      padding: 4px 1px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0.4;
-    }
-    .node-cell.active { opacity: 1; }
-
-    .node-graphic { margin-bottom: 2px; display: flex; }
-    .node-graphic svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
-
-    .node-cell span {
-      font-size: 0.4rem;
-      font-weight: 800;
-      white-space: nowrap;
-      display: block;
-      transform: scale(0.88);
-      color: var(--text-muted-slate);
-    }
-
-    .node-cell small {
-      font-size: 0.36rem;
-      font-weight: 900;
-      transform: scale(0.82);
-      color: var(--text-dark-charcoal);
-    }
-    .node-cell.active small { color: var(--color-green-success); }
-
-    /* ==========================================================================
-       7. DOCK TAB SYSTEM
-       ========================================================================== */
-    .navigation-dock-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #04070f;
-      border-top: 1px solid var(--border-neon-glow);
-      z-index: 100;
-      display: flex;
-      justify-content: space-around;
-      padding-bottom: env(safe-area-inset-bottom, 10px);
-      padding-top: 6px;
-      height: calc(52px + env(safe-area-inset-bottom, 10px));
-    }
-
-    .dock-action-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-dark-charcoal);
-      width: 20%;
-    }
-
-    .dock-icon { display: flex; margin-bottom: 2px; }
-    .dock-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
-
-    .dock-label {
-      font-size: 0.52rem;
-      font-weight: 800;
-      color: var(--text-muted-slate);
-    }
-
-    .dock-action-item.active {
-      color: var(--color-orange-neon);
-      border-top: 2px solid var(--color-orange-neon);
-      margin-top: -6px;
-      padding-top: 4px;
-    }
-    .dock-action-item.active .dock-label { color: var(--color-orange-neon); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rolling Wrench AI - Professional Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        heavyDark: '#070A0F',
+                        panelDark: '#0D131F',
+                        widgetDark: '#141C2C',
+                        glowOrange: '#FF7A00',
+                        glowGreen: '#10B981',
+                        glowBlue: '#3B82F6',
+                        glowRed: '#EF4444',
+                        glowPurple: '#A855F7'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #070A0F;
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Hide scrollbar track for clean presentation */
+        .scroller::-webkit-scrollbar { width: 4px; }
+        .scroller::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 4px; }
+        
+        /* Premium Skeuomorphic Drop Shadows & Bevels */
+        .industrial-panel {
+            background: linear-gradient(145deg, #0F1626, #0A0E1A);
+            border: 1px solid #1E293B;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 10px 15px -3px rgba(0,0,0,0.7);
+        }
+        .heavy-btn {
+            background: linear-gradient(180deg, #1C2638 0%, #111A28 100%);
+            border: 1px solid #2D3D54;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 6px rgba(0,0,0,0.4);
+            transition: all 0.05s ease;
+        }
+        .heavy-btn:active {
+            transform: translateY(1px);
+            background: linear-gradient(180deg, #111A28 0%, #0A101A 100%);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+        }
+        .glow-border-orange { border: 1px solid rgba(255,122,0,0.4); box-shadow: 0 0 10px rgba(255,122,0,0.1); }
+        .glow-border-blue { border: 1px solid rgba(59,130,246,0.4); box-shadow: 0 0 10px rgba(59,130,246,0.1); }
+    </style>
 </head>
-<body>
-  <div class="app-container">
+<body class="flex justify-center bg-black overflow-hidden select-none">
 
-    <header class="app-header">
-      <div class="header-left">
-        <button class="nav-btn" aria-label="Menu">
-          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </button>
-        <button class="nav-btn" aria-label="Back">
-          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
-      </div>
-      <div class="header-brand">
-        <h1>ROLLING WRENCH <span class="text-orange">AI</span></h1>
-        <p class="subtitle">DIESEL DIAGNOSTICS & REPAIR PLATFORM</p>
-      </div>
-      <button class="nav-btn" aria-label="Settings">
-        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      </button>
-    </header>
+    <div class="relative w-full max-w-md h-screen bg-heavyDark flex flex-col border-x border-gray-900 text-gray-200 shadow-2xl overflow-hidden">
+        
+        <header class="w-full bg-heavyDark/90 border-b border-gray-800 p-4 pb-3 z-40 flex flex-col gap-2 shrink-0 backdrop-blur-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button class="text-gray-400 hover:text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
+                    <div>
+                        <h1 class="text-lg font-black tracking-wider text-glowOrange flex items-center gap-1">
+                            ROLLING WRENCH <span class="text-white">AI</span>
+                        </h1>
+                        <p class="text-[9px] uppercase tracking-widest text-gray-500 font-bold -mt-1">Diesel Diagnostics & Repair Platform</p>
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-white p-1 bg-panelDark rounded-lg border border-gray-800"><i data-lucide="settings" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div class="w-full bg-panelDark/60 border border-gray-800/80 rounded-lg px-3 py-1.5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-glowGreen animate-pulse"></span>
+                    <span class="text-[10px] font-bold tracking-wide uppercase text-gray-400">Active Truck: <span class="text-white">Cummins X15</span></span>
+                </div>
+                <span class="text-[9px] font-mono text-gray-500 tracking-wider">VIN: 1XP4D49X8KD123456</span>
+            </div>
+        </header>
 
-    <div class="status-ribbon">
-      <div class="status-item"><span class="indicator-dot dot-green"></span> ACTIVE TRUCK</div>
-      <div class="status-item font-highlight">CUMMINS X15</div>
-      <div class="status-item text-muted">VIN: 1XP4D49X8KD123456</div>
-      <div class="status-item connection-state">🔗 CONNECTED</div>
+        <div id="page-home" class="flex-1 overflow-y-auto scroller p-4 space-y-4 pb-24">
+            
+            <div class="relative w-full glow-border-orange rounded-xl overflow-hidden">
+                <div class="absolute left-3.5 top-3.5 text-glowOrange"><span class="text-xs font-black border border-glowOrange/40 rounded px-1 py-0.5">RW</span></div>
+                <input type="text" placeholder="Ask Rolling Wrench AI... VIN, part number, fault, notes" 
+                       class="w-full bg-panelDark border border-gray-800 rounded-xl py-3.5 pl-12 pr-24 text-xs font-medium text-white placeholder-gray-500 focus:outline-none shadow-inner">
+                <div class="absolute right-2 top-2 flex items-center gap-1.5">
+                    <i data-lucide="mic" class="w-4 h-4 text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i data-lucide="list-todo" class="w-4 h-4 text-gray-400 hover:text-white cursor-pointer"></i>
+                    <i data-lucide="camera" class="w-4 h-4 text-gray-400 hover:text-white cursor-pointer"></i>
+                </div>
+            </div>
+
+            <div class="industrial-panel rounded-xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h2 class="text-sm font-black text-white">2020 FREIGHTLINER CASCADIA</h2>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Class 8 Heavy Duty Hauler</p>
+                    </div>
+                    <button class="text-[9px] font-black text-glowOrange uppercase bg-glowOrange/10 border border-glowOrange/30 px-2 py-1 rounded">Scan / Change Truck</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center border-t border-gray-800/60 pt-3">
+                    <div class="bg-heavyDark/40 p-2 rounded border border-gray-800/40"><p class="text-[8px] text-gray-500 font-bold uppercase">Engine</p><p class="text-xs font-bold text-white">Cummins X15</p></div>
+                    <div class="bg-heavyDark/40 p-2 rounded border border-gray-800/40"><p class="text-[8px] text-gray-500 font-bold uppercase">Odometer</p><p class="text-xs font-bold text-white">453,213 MI</p></div>
+                    <div class="bg-heavyDark/40 p-2 rounded border border-gray-800/40"><p class="text-[8px] text-gray-500 font-bold uppercase">Engine Hours</p><p class="text-xs font-bold text-white">8,912 HRS</p></div>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <p class="text-[10px] font-black tracking-widest text-gray-500 uppercase flex items-center gap-1"><i data-lucide="search" class="w-3 h-3"></i> Master Search Quick Targets</p>
+                <div class="flex gap-1.5 overflow-x-auto pb-1 scroller">
+                    <button class="heavy-btn px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0"><i data-lucide="binary" class="w-3 h-3 text-glowOrange"></i> VIN</button>
+                    <button class="heavy-btn px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0"><i data-lucide="settings" class="w-3 h-3 text-glowOrange"></i> PART #</button>
+                    <button class="heavy-btn px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0"><i data-lucide="alert-circle" class="w-3 h-3 text-glowOrange"></i> SPN/FMI</button>
+                    <button class="heavy-btn px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0"><i data-lucide="activity" class="w-3 h-3 text-glowOrange"></i> SYMPTOM</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="industrial-panel p-3.5 rounded-xl flex flex-col items-center text-center gap-2 border-l-2 border-l-glowOrange">
+                    <div class="w-10 h-10 rounded-lg bg-widgetDark border border-gray-700 flex items-center justify-center"><i data-lucide="fingerprint" class="w-6 h-6 text-glowOrange"></i></div>
+                    <div><h3 class="text-xs font-black text-white">VIN LOOKUP</h3><p class="text-[9px] text-gray-500 font-medium mt-0.5">Decode VIN, ESN, specs</p></div>
+                </div>
+                <div class="industrial-panel p-3.5 rounded-xl flex flex-col items-center text-center gap-2 border-l-2 border-l-blue-500">
+                    <div class="w-10 h-10 rounded-lg bg-widgetDark border border-gray-700 flex items-center justify-center"><i data-lucide="box" class="w-6 h-6 text-blue-500"></i></div>
+                    <div><h3 class="text-xs font-black text-white">OEM PARTS</h3><p class="text-[9px] text-gray-500 font-medium mt-0.5">Parts catalog & kits</p></div>
+                </div>
+                <div class="industrial-panel p-3.5 rounded-xl flex flex-col items-center text-center gap-2 border-l-2 border-l-glowGreen">
+                    <div class="w-10 h-10 rounded-lg bg-widgetDark border border-gray-700 flex items-center justify-center"><i data-lucide="stethoscope" class="w-6 h-6 text-glowGreen"></i></div>
+                    <div><h3 class="text-xs font-black text-white">DIESEL DOCTOR</h3><p class="text-[9px] text-gray-500 font-medium mt-0.5">Fault code triage matrix</p></div>
+                </div>
+                <div class="industrial-panel p-3.5 rounded-xl flex flex-col items-center text-center gap-2 border-l-2 border-l-glowPurple">
+                    <div class="w-10 h-10 rounded-lg bg-widgetDark border border-gray-700 flex items-center justify-center"><i data-lucide="brain" class="w-6 h-6 text-glowPurple"></i></div>
+                    <div><h3 class="text-xs font-black text-white">REPAIR BRAIN</h3><p class="text-[9px] text-gray-500 font-medium mt-0.5">AI troubleshooting engine</p></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2.5">
+                <div class="bg-panelDark/60 border border-gray-800 rounded-xl p-2.5 flex flex-col items-center text-center gap-1.5">
+                    <i data-lucide="calculator" class="w-4 h-4 text-gray-400"></i>
+                    <span class="text-[10px] font-black text-white leading-tight">SMART QUOTES</span>
+                </div>
+                <div class="bg-panelDark/60 border border-gray-800 rounded-xl p-2.5 flex flex-col items-center text-center gap-1.5">
+                    <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                    <span class="text-[10px] font-black text-white leading-tight">JOB CLOCK</span>
+                </div>
+                <div class="bg-panelDark/60 border border-gray-800 rounded-xl p-2.5 flex flex-col items-center text-center gap-1.5">
+                    <i data-lucide="scan-face" class="w-4 h-4 text-gray-400"></i>
+                    <span class="text-[10px] font-black text-white leading-tight">VISION / OCR</span>
+                </div>
+            </div>
+
+            <div class="industrial-panel rounded-xl p-3 space-y-2">
+                <div class="flex items-center gap-1.5 border-b border-gray-800/60 pb-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-glowGreen"></i><span class="text-[10px] font-black uppercase tracking-wider text-gray-400">Infrastructure Array Status</span></div>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 font-mono text-[9px] text-gray-400">
+                    <div class="flex items-center justify-between"><span>Supabase Sync</span><span class="text-glowGreen font-bold">ONLINE</span></div>
+                    <div class="flex items-center justify-between"><span>AI Core Layer</span><span class="text-glowGreen font-bold">READY</span></div>
+                    <div class="flex items-center justify-between"><span>J1939 Adapter</span><span class="text-glowGreen font-bold">LINKED</span></div>
+                    <div class="flex items-center justify-between"><span>Offline Cache</span><span class="text-gray-500 font-bold">STABLE</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="page-scan" class="flex-1 overflow-y-auto scroller p-4 space-y-5 pb-24 hidden">
+            
+            <div class="industrial-panel border-l-4 border-l-blue-500 rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><i data-lucide="bluetooth" class="w-5 h-5 text-blue-500"></i><h3 class="text-xs font-black uppercase text-white">9-Pin J1939 Transceiver</h3></div>
+                    <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-glowRed/10 border border-glowRed/30 text-glowRed">Link Closed</span>
+                </div>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl text-xs uppercase tracking-widest shadow-lg border border-blue-400/30">
+                    ⚡ Open Link Target
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                <div class="bg-panelDark border border-gray-800 rounded-xl p-3 flex items-center justify-between"><span class="text-gray-300">Live Stream Data</span><i data-lucide="trending-up" class="w-4 h-4 text-glowGreen"></i></div>
+                <div class="bg-panelDark border border-gray-800 rounded-xl p-3 flex items-center justify-between border-b-glowRed/50"><span class="text-gray-300">Active Fault Logs</span><i data-lucide="alert-triangle" class="w-4 h-4 text-glowRed"></i></div>
+                <div class="bg-panelDark border border-gray-800 rounded-xl p-3 flex items-center justify-between"><span class="text-gray-300">Freeze Frame</span><i data-lucide="snowflake" class="w-4 h-4 text-cyan-400"></i></div>
+                <div class="bg-panelDark border border-gray-800 rounded-xl p-3 flex items-center justify-between"><span class="text-gray-300">I/M Monitors</span><i data-lucide="check-circle-2" class="w-4 h-4 text-glowGreen"></i></div>
+            </div>
+
+            <div class="industrial-panel rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+                    <div class="flex items-center gap-2"><i data-lucide="circle-dot" class="w-4 h-4 text-glowRed"></i><h3 class="text-xs font-black uppercase text-white">ABS Sensor Speed Feed</h3></div>
+                    <span class="text-[10px] font-mono font-black text-glowRed bg-glowRed/10 px-1.5 py-0.5 rounded border border-glowRed/20">1 Active Fault</span>
+                </div>
+                <div class="space-y-1.5 font-mono text-[11px]">
+                    <div class="flex justify-between py-1 border-b border-heavyDark"><span>Steer Axle Layer</span><span class="text-white font-bold">L: 6 MPH | R: 6 MPH</span><span class="text-glowGreen">🟢</span></div>
+                    <div class="flex justify-between py-1 border-b border-heavyDark bg-glowRed/5 px-1 rounded border border-glowRed/10">
+                        <span class="text-glowRed font-bold">Drive Axle 1</span><span class="text-white font-bold">L: 5 MPH | <span class="text-glowRed font-black animate-pulse">R: 0 MPH</span></span><span class="text-glowRed animate-pulse">⚠️</span>
+                    </div>
+                    <div class="flex justify-between py-1"><span>Drive Axle 2</span><span class="text-white font-bold">L: 5 MPH | R: 5 MPH</span><span class="text-glowGreen">🟢</span></div>
+                </div>
+            </div>
+
+            <div class="industrial-panel rounded-xl p-4 space-y-3 border-t-2 border-t-glowGreen">
+                <div class="flex items-center justify-between"><div class="flex items-center gap-2"><i data-lucide="flame" class="w-4 h-4 text-glowGreen"></i><h3 class="text-xs font-black uppercase text-white">DPF Regeneration Control</h3></div></div>
+                <div class="space-y-2">
+                    <div>
+                        <div class="flex justify-between text-[10px] font-bold mb-0.5"><span class="text-gray-400">Soot Accumulation Rate</span><span class="text-glowOrange font-bold">52%</span></div>
+                        <div class="w-full h-2 bg-heavyDark rounded-full overflow-hidden border border-gray-800"><div class="h-full bg-glowOrange" style="width: 52%"></div></div>
+                    </div>
+                </div>
+                <button class="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-black py-3.5 rounded-xl text-xs uppercase tracking-widest shadow-md">
+                    🔥 Initiate Regeneration sequence
+                </button>
+            </div>
+
+            <div class="industrial-panel border-l-4 border-l-glowPurple rounded-xl p-4 space-y-2.5">
+                <div class="flex items-center gap-1.5 text-glowPurple"><i data-lucide="bot" class="w-4 h-4"></i><h4 class="text-xs font-black uppercase">Automated Repair Graph Log</h4></div>
+                <div class="bg-heavyDark/50 rounded-lg p-3 text-[11px] font-medium leading-relaxed text-gray-300 space-y-2 font-mono">
+                    <p class="text-glowPurple font-bold">&gt;&gt; ANALYSIS COMPLETE:</p>
+                    <p>Drive Axle 1 Right speed dropout is highly correlated with common harness fatigue over the frame rail crossmember bracket.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <nav class="absolute bottom-0 left-0 right-0 bg-heavyDark/95 border-t border-gray-800 px-3 py-3.5 z-40 shrink-0 shadow-2xl backdrop-blur-md">
+            <div class="grid grid-cols-5 gap-1 text-center">
+                <button id="nav-home" onclick="showPage('home')" class="flex flex-col items-center justify-center text-glowOrange gap-1 transition-colors">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i><span class="text-[9px] font-black uppercase tracking-wider">Home</span>
+                </button>
+                <button id="nav-scan" onclick="showPage('scan')" class="flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1 transition-colors">
+                    <i data-lucide="radio" class="w-5 h-5"></i><span class="text-[9px] font-black uppercase tracking-wider">Scan</span>
+                </button>
+                <button class="flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1 opacity-40">
+                    <i data-lucide="wrench" class="w-5 h-5"></i><span class="text-[9px] font-black uppercase tracking-wider">Doctor</span>
+                </button>
+                <button class="flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1 opacity-40">
+                    <i data-lucide="layers" class="w-5 h-5"></i><span class="text-[9px] font-black uppercase tracking-wider">Brain</span>
+                </button>
+                <button class="flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1 opacity-40">
+                    <i data-lucide="menu" class="w-5 h-5"></i><span class="text-[9px] font-black uppercase tracking-wider">More</span>
+                </button>
+            </div>
+        </nav>
+
     </div>
 
-    <main class="viewport">
-
-      <section class="ai-input-module">
-        <div class="ai-avatar">RW</div>
-        <div class="ai-text-group">
-          <span class="ai-title">Ask Rolling Wrench AI...</span>
-          <span class="ai-sub">VIN, part number, fault code, symptom, repair...</span>
-        </div>
-        <div class="ai-actions">
-          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 1.1-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-        </div>
-      </section>
-
-      <section class="vehicle-profile-card">
-        <div class="vehicle-art-bay">
-          <svg viewBox="0 0 64 64">
-            <path d="M4 42h4v4H4zm42-12h-8v-6h8zm14 10l-4-9h-10v13h14zm-30-3h-6v4h6zm-24 7V26h28v18H16v-2H8v2zm26-21h-6v3h6zm-14 0H8v3h8z" stroke="#94a3b8" stroke-width="2" fill="none"/>
-            <circle cx="18" cy="48" r="4" stroke="#94a3b8" stroke-width="2" fill="none"/>
-            <circle cx="46" cy="48" r="4" stroke="#94a3b8" stroke-width="2" fill="none"/>
-          </svg>
-        </div>
-        <div class="vehicle-spec-pane">
-          <div class="pane-header">
-            <h2>2020 Freightliner Cascadia</h2>
-            <button class="action-tag-btn">SCAN / CHANGE TRUCK</button>
-          </div>
-          <div class="spec-matrix-sheet">
-            <div class="spec-cell"><label>VIN</label><span>1XP4D49X8KD123456</span></div>
-            <div class="spec-cell"><label>ENGINE</label><span>CUMMINS X15</span></div>
-            <div class="spec-cell"><label>ESN</label><span>79876562</span></div>
-            <div class="spec-cell"><label>CPL</label><span>4342</span></div>
-            <div class="spec-cell"><label>EPA FAMILY</label><span>LCEXH0912XAP</span></div>
-            <div class="spec-cell"><label>ODOMETER</label><span>453,213 MI</span></div>
-            <div class="spec-cell"><label>HOURS</label><span>8,912 HRS</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="search-filter-module">
-        <div class="module-title">
-          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          MASTER SEARCH
-        </div>
-        <div class="filter-scroll-row">
-          <button class="filter-tab active">VIN</button>
-          <button class="filter-tab">PART #</button>
-          <button class="filter-tab">SPN / FMI</button>
-          <button class="filter-tab">SYMPTOM</button>
-          <button class="filter-tab">REPAIR</button>
-          <button class="filter-tab">QUOTE NOTE</button>
-        </div>
-      </section>
-
-      <section class="primary-feature-grid">
-        <button class="feature-block-item" data-action="action:vin-lookup">
-          <div class="block-visual">
-            <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3v12h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM8 17.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm10 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-          </div>
-          <h3>VIN LOOKUP</h3>
-          <p>Decode VIN, ESN, CPL, specs & info</p>
-        </button>
-        <button class="feature-block-item" data-action="action:oem-parts">
-          <div class="block-visual">
-            <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-          </div>
-          <h3>OEM PARTS</h3>
-          <p>OEM parts lookup, interchange & kits</p>
-        </button>
-        <button class="feature-block-item" data-action="action:diesel-doctor">
-          <div class="block-visual">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-          </div>
-          <h3>DIESEL DOCTOR</h3>
-          <p>Fault code lookup, SPN, FMI, diagnostics</p>
-        </button>
-        <button class="feature-block-item" data-action="action:repair-brain">
-          <div class="block-visual">
-            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
-          </div>
-          <h3>REPAIR BRAIN</h3>
-          <p>AI repair assistant & troubleshooting</p>
-        </button>
-      </section>
-
-      <section class="secondary-feature-grid">
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
-          <h4>SMART QUOTES</h4>
-          <p>Build quotes, parts, labor</p>
-        </button>
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div>
-          <h4>JOB CLOCK</h4>
-          <p>Track time & labor</p>
-        </button>
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 1.1-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg></div>
-          <h4>VISION / OCR</h4>
-          <p>Scan codes & labels</p>
-        </button>
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
-          <h4>SERVICE MANUALS</h4>
-          <p>OEM manuals & info</p>
-        </button>
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
-          <h4>DOT / GPS</h4>
-          <p>ELD logs & maps</p>
-        </button>
-        <button class="utility-block-item">
-          <div class="util-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
-          <h4>REPAIR MEMORY</h4>
-          <p>Saved repairs & notes</p>
-        </button>
-      </section>
-
-      <section class="hardware-telemetry-module">
-        <div class="telemetry-header">
-          <span>SYSTEM STATUS</span>
-          <span class="status-pulse-label">📈 All systems operational</span>
-        </div>
-        <div class="telemetry-node-row">
-          <div class="node-cell active">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3v12h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/></svg></div>
-            <span>OEM GATEWAY</span>
-            <small>CONNECTED</small>
-          </div>
-          <div class="node-cell active">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.47 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
-            <span>AI SYSTEM</span>
-            <small>ONLINE</small>
-          </div>
-          <div class="node-cell active">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
-            <span>SUPABASE</span>
-            <small>SYNCED</small>
-          </div>
-          <div class="node-cell active">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>
-            <span>MEMORY</span>
-            <small>ACTIVE</small>
-          </div>
-          <div class="node-cell active">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
-            <span>SCANNER</span>
-            <small>CONNECTED</small>
-          </div>
-          <div class="node-cell">
-            <div class="node-graphic"><svg viewBox="0 0 24 24"><path d="M12 21l-1.41-1.41L16.17 14H4v-2h12.17l-5.58-5.59L12 5l8 8z"/></svg></div>
-            <span>OFFLINE</span>
-            <small>READY</small>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <nav class="navigation-dock-bar">
-      <button class="dock-action-item active" data-action="nav:home">
-        <span class="dock-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
-        <span class="dock-label">HOME</span>
-      </button>
-      <button class="dock-action-item" data-action="nav:doctor">
-        <span class="dock-icon"><svg viewBox="0 0 24 24"><path d="M4.5 10.5C3.67 10.5 3 11.17 3 12s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zM10.5 4.5C9.67 4.5 9 5.17 9 6s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg></span>
-        <span class="dock-label">DOCTOR</span>
-      </button>
-      <button class="dock-action-item" data-action="nav:parts">
-        <span class="dock-icon"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46z"/></svg></span>
-        <span class="dock-label">PARTS</span>
-      </button>
-      <button class="dock-action-item" data-action="nav:repair">
-        <span class="dock-icon"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L7.8 4.8 4.8 7.8 1.7 4.7C.6 7.1 1 10.1 3 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1.1 0-1.4z"/></svg></span>
-        <span class="dock-label">REPAIR</span>
-      </button>
-      <button class="dock-action-item" data-action="nav:more">
-        <span class="dock-icon"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span>
-        <span class="dock-label">MORE</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.addEventListener('click', (e) => {
-        const targetButton = e.target.closest('[data-action]');
-        if (!targetButton) return;
-
-        const actionRaw = targetButton.getAttribute('data-action');
-        const [type, command] = actionRaw.split(':');
-
-        if (type === 'nav') {
-          document.querySelectorAll('.dock-action-item').forEach(btn => btn.classList.remove('active'));
-          targetButton.classList.add('active');
-        } else {
-          console.log(`Executing diagnostic action: ${command}`);
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-scan').classList.add('hidden');
+            
+            // Reset nav colors
+            document.getElementById('nav-home').className = 'flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1';
+            document.getElementById('nav-scan').className = 'flex flex-col items-center justify-center text-gray-500 hover:text-white gap-1';
+            
+            // Activate selected target
+            if (pageId === 'home') {
+                document.getElementById('page-home').classList.remove('hidden');
+                document.getElementById('nav-home').className = 'flex flex-col items-center justify-center text-glowOrange gap-1';
+            } else if (pageId === 'scan') {
+                document.getElementById('page-scan').classList.remove('hidden');
+                document.getElementById('nav-scan').className = 'flex flex-col items-center justify-center text-glowOrange gap-1';
+            }
         }
-      });
-    });
-  </script>
+        
+        // Render initial icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
