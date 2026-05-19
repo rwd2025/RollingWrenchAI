@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#050505" />
+<title>Rolling Wrench AI</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="appShell">
+  <aside id="drawer" class="drawer">
+    <div class="drawerBrand"><div class="logoMark">RW</div><div><b>ROLLING <span>WRENCH</span> AI</b><small>Diesel Diagnostics Platform</small></div></div>
+    <button data-screen="home">🏠 Home</button><button data-screen="doctor">🩺 Fault Doctor</button><button data-screen="parts">⚙️ OEM Parts</button><button data-screen="repair">🛠️ Repair HUD</button><button data-screen="quotes">📜 Smart Quotes</button><button data-screen="workorders">📋 Work Orders</button><button data-screen="clock">🕒 Time Clock</button><button data-screen="vision">📷 Camera / OCR</button><button data-screen="gps">📍 DOT / GPS</button><button data-screen="memory">🧠 Repair Memory</button><button data-screen="suppliers">🤝 Suppliers</button><button data-screen="ai">🤖 AI Assistant</button><button data-screen="reports">📊 Reports</button><button data-screen="settings">⚙️ Settings</button>
+  </aside>
+  <div id="shade" class="shade"></div>
+
+  <main class="phoneFrame">
+    <header class="topHeader">
+      <button id="menuBtn" class="squareBtn">☰</button>
+      <div class="brandTitle"><div class="gearLogo">⚙️</div><div><h1>ROLLING <span>WRENCH</span> AI</h1><p>DIESEL DIAGNOSTICS & REPAIR PLATFORM</p></div></div>
+      <button class="iconBtn">🔔<i>3</i></button><button data-screen="settings" class="iconBtn">⚙️</button>
+    </header>
+
+    <section class="statusPill"><b>🟢 ACTIVE TRUCK</b><span>CUMMINS X15</span><span>VIN: 1XP4D49X8KD123456</span><em>🔗 CONNECTED</em></section>
+
+    <section id="home" class="screen active">
+      <div class="topCards">
+        <article class="dashCard clockCard"><h3>TIME CLOCK</h3><p class="green">● <span id="clockState">ON STANDBY</span></p><strong id="clockTime">00:00:00</strong><small>Today's Earnings</small><h2 id="earnings">$0.00</h2><small class="green">Rolling</small><button id="clockToggle" class="orangeBtn">CLOCK IN</button></article>
+        <article class="dashCard truckCard"><h3>ACTIVE TRUCK</h3><div class="truckFlex"><div class="truckImg">🚛</div><div><h2>2020 FREIGHTLINER<br/>CASCADIA 126</h2><p>VIN: 1XP4D49X8KD123456</p><p>Engine: CUMMINS X15</p><p>CPL: 4342</p><p>Odometer: 453,218 mi</p><p>Hours: 8,912 HRS</p></div></div><button data-screen="trucks" class="orangeBtn">TRUCK PROFILE</button></article>
+        <article class="dashCard healthCard"><h3>SYSTEM STATUS</h3><div class="gauge"><span>98%</span><small>HEALTH</small></div><p class="green center">All Systems Normal ✅</p><button data-screen="reports" class="orangeBtn">VIEW DETAILS</button></article>
+      </div>
+
+      <div class="searchPanel"><div class="searchIcon">⌕</div><input id="masterSearch" placeholder="Search VIN, Part #, Symptoms, Fault Codes, Repair..."/><button>▦</button></div>
+
+      <div class="toolGrid">
+        <button data-screen="trucks"><span>🚚</span><b>VIN LOOKUP</b><small>Decode VIN, ESN, CPL & more</small></button>
+        <button data-screen="parts"><span>⚙️📦</span><b>OEM PARTS</b><small>Search OEM parts & diagrams</small></button>
+        <button data-screen="doctor"><span>🩺</span><b>FAULT DOCTOR</b><small>AI powered fault diagnostics</small></button>
+        <button data-screen="repair"><span>🖥️</span><b>REPAIR HUD</b><small>Step-by-step repair guidance</small></button>
+        <button data-screen="quotes"><span>📜💵</span><b>SMART QUOTES</b><small>Create quotes & estimates</small></button>
+        <button data-screen="workorders"><span>📋</span><b>WORK ORDERS</b><small>Create, manage & track jobs</small></button>
+        <button data-screen="clock"><span>🕒</span><b>TIME CLOCK</b><small>Track time, jobs & labor</small></button>
+        <button data-screen="vision"><span>📷</span><b>CAMERA / OCR</b><small>Scan codes, parts & documents</small></button>
+        <button data-screen="gps"><span>📍</span><b>DOT / GPS</b><small>GPS, routes, ELD & location</small></button>
+        <button data-screen="memory"><span>🧠</span><b>REPAIR MEMORY</b><small>Saved repairs, history & notes</small></button>
+        <button data-screen="suppliers"><span>🤝</span><b>SUPPLIERS</b><small>Parts suppliers & contacts</small></button>
+        <button data-screen="ai"><span>🤖</span><b>AI ASSISTANT</b><small>Ask AI for help, advice & more</small></button>
+        <button data-screen="reports"><span>📊</span><b>REPORTS</b><small>Analytics & performance</small></button>
+        <button data-screen="settings"><span>⚙️</span><b>SETTINGS</b><small>App settings & preferences</small></button>
+      </div>
+
+      <div class="lowerGrid">
+        <article class="dashCard listCard"><h3>⚠️ TOP FAULTS TODAY <a>View All</a></h3><p><b>P2009</b><small>DPF Differential Pressure</small><em>4</em></p><p><b>SPN 157</b><small>EGR Position Sensor</small><em>3</em></p><p><b>SPN 111 FMI 5</b><small>Coolant Temperature High</small><em>2</em></p><p><b>U0101</b><small>Lost Comm w/ ECM</small><em>1</em></p></article>
+        <article class="dashCard listCard"><h3>RECENT WORK ORDERS <a>View All</a></h3><p><b>WO-10045</b><small>DPF Cleaning</small><mark>IN PROGRESS</mark></p><p><b>WO-10044</b><small>EGR Valve Replacement</small><mark class="done">COMPLETE</mark></p><p><b>WO-10043</b><small>Coolant Temp Sensor</small><mark class="done">COMPLETE</mark></p></article>
+        <article class="dashCard earningsCard"><h3>EARNINGS SUMMARY <select><option>This Week</option></select></h3><h2>$3,842.50</h2><p>Total Earnings</p><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button data-screen="reports" class="orangeBtn">VIEW REPORTS</button></article>
+      </div>
+      <div class="miniStatus"><span>🛠️ GATEWAY <b>CONNECTED</b></span><span>🧠 AI SYSTEM <b>ONLINE</b></span><span>☁️ SUPABASE <b>SYNCED</b></span><span>🔷 BLUETOOTH <b>CONNECTED</b></span></div>
+    </section>
+
+    <section id="doctor" class="screen"><h2>FAULT DOCTOR</h2><div class="dashCard form"><label>Fault / SPN / FMI / Symptom</label><textarea id="faultInput">SPN 157 FMI 18 low fuel rail pressure under load</textarea><button id="runDiag" class="orangeBtn">RUN AI DIAGNOSTIC</button><div id="diagOut" class="resultBox">Ready.</div></div></section>
+    <section id="parts" class="screen"><h2>OEM PARTS</h2><div class="dashCard form"><label>Part Number / Engine / VIN</label><input id="partInput" value="ISX15 rear main seal"/><button id="runParts" class="orangeBtn">SEARCH OEM PARTS</button><div id="partOut" class="resultBox">Ready.</div></div></section>
+    <section id="quotes" class="screen"><h2>SMART QUOTES</h2><div class="dashCard form gridForm"><input id="laborRate" value="135"/><input id="hours" value="2.5"/><input id="serviceCall" value="250"/><input id="partsCost" value="400"/><button id="calcQuote" class="orangeBtn">CALCULATE QUOTE</button><div id="quoteOut" class="resultBox full">Ready.</div></div></section>
+    <section id="workorders" class="screen"><h2>WORK ORDERS</h2><div class="dashCard resultBox">WO-10045 DPF Cleaning — In Progress<br/>WO-10044 EGR Valve Replacement — Complete<br/>WO-10043 Coolant Temp Sensor — Complete</div></section>
+    <section id="clock" class="screen"><h2>TIME CLOCK</h2><div class="dashCard clockBig"><strong id="clockTime2">00:00:00</strong><h2 id="earnings2">$0.00</h2><button id="clockToggle2" class="orangeBtn">CLOCK IN</button><button id="resetClock" class="ghostBtn">RESET</button></div></section>
+    <section id="trucks" class="screen"><h2>TRUCK PROFILE</h2><div class="dashCard form"><input id="truckName" value="2020 Freightliner Cascadia 126"/><input id="truckVin" value="1XP4D49X8KD123456"/><input id="truckEngine" value="Cummins X15"/><button id="saveTruck" class="orangeBtn">SAVE ACTIVE TRUCK</button><div class="resultBox">Truck profile ready.</div></div></section>
+    <section id="repair" class="screen"><h2>REPAIR HUD</h2><div class="dashCard resultBox">Step 1: Confirm complaint. Step 2: Pull active/inactive faults. Step 3: Verify power, ground, sensor reference. Step 4: Run OEM test plan. Step 5: Save confirmed fix.</div></section>
+    <section id="vision" class="screen"><h2>CAMERA / OCR</h2><div class="dashCard resultBox">Camera/OCR workflow ready for part numbers, labels, fault screens, and documents.</div></section>
+    <section id="gps" class="screen"><h2>DOT / GPS</h2><div class="dashCard resultBox">GPS pin, routes, ELD logs, DOT inspection notes, and location history placeholder.</div></section>
+    <section id="memory" class="screen"><h2>REPAIR MEMORY</h2><div class="dashCard resultBox">Saved confirmed fixes by VIN, engine, code, symptom, parts used, and labor notes.</div></section>
+    <section id="suppliers" class="screen"><h2>SUPPLIERS</h2><div class="dashCard resultBox">NAPA, O'Reilly, FleetPride, dealer, Google search links, and saved supplier contacts.</div></section>
+    <section id="ai" class="screen"><h2>AI ASSISTANT</h2><div class="dashCard form"><textarea id="aiPrompt">Ask Rolling Wrench AI...</textarea><button class="orangeBtn">ASK AI</button><div class="resultBox">AI assistant shell ready.</div></div></section>
+    <section id="reports" class="screen"><h2>REPORTS</h2><div class="dashCard resultBox">Weekly earnings, work order count, average invoice, top faults, and repeat repair patterns.</div></section>
+    <section id="settings" class="screen"><h2>SETTINGS</h2><div class="dashCard resultBox">Shop phone: 260-502-6222<br/>Website: rollingwrenchdiesel.com<br/>Default rate: $135/hr<br/>Service call: $250</div></section>
+
+    <nav class="bottomNav"><button data-screen="home" class="active">🏠<b>HOME</b></button><button data-screen="doctor">🩺<b>DOCTOR</b></button><button data-screen="parts">⚙️<b>PARTS</b></button><button data-screen="repair">🔧<b>REPAIR</b></button><button data-screen="settings">•••<b>MORE</b></button></nav>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
