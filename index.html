@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070a" />
+  <title>Rolling Wrench AI — Phase 1 Design System</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn" data-action="openMenu" aria-label="Menu">☰</button>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span>RW</span></div>
+        <div>
+          <h1><span>ROLLING</span> <b>WRENCH</b> AI</h1>
+          <p>DIESEL DIAGNOSTICS & REPAIR PLATFORM</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn badge" data-action="notify" aria-label="Notifications">🔔<small>3</small></button>
+        <button class="icon-btn" data-route="settings" aria-label="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <section class="status-strip glass-panel">
+      <span class="dot live"></span><strong>ACTIVE TRUCK</strong>
+      <i></i><span>CUMMINS X15</span>
+      <i></i><span>VIN: 1XP4D49X8KD123456</span>
+      <i></i><span class="connected">🔗 CONNECTED</span>
+    </section>
+
+    <main id="view" class="view" aria-live="polite"></main>
+
+    <nav class="bottom-nav glass-panel" aria-label="Primary navigation">
+      <button class="active" data-route="home"><span>⌂</span>HOME</button>
+      <button data-route="doctor"><span>🩺</span>DOCTOR</button>
+      <button data-route="parts"><span>⚙️</span>PARTS</button>
+      <button data-route="repair"><span>🔧</span>REPAIR</button>
+      <button data-route="more"><span>•••</span>MORE</button>
+    </nav>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-card glass-panel">
+      <button class="icon-btn drawer-close" data-action="closeMenu">×</button>
+      <h2>Rolling Wrench AI</h2>
+      <p>Phase 1: unified design system, navigation, cards, responsive layout, and working UI shell.</p>
+      <button data-route="home">Dashboard</button>
+      <button data-route="scan">Scanner Shell</button>
+      <button data-route="ecm">ECM Shell</button>
+      <button data-route="settings">Settings</button>
+    </div>
+  </aside>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
