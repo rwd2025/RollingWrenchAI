@@ -54,3 +54,48 @@ function executeDiagnosticCommand(command) {
       }
   }
 }
+// Drop this into your background listener or Zustand store subscriber
+function updateDashboardTelemetry(vehicleData, systemMetrics) {
+  
+  // 1. Update active specification matrix text fields
+  const specFields = {
+    'vin': vehicleData.vin || '---',
+    'engine': vehicleData.engine || '---',
+    'esn': vehicleData.esn || '---',
+    'odometer': vehicleData.odometer ? `${vehicleData.odometer} MI` : '---',
+    'hours': vehicleData.hours ? `${vehicleData.hours} HRS` : '---'
+  };
+
+  // Dynamically map properties directly into your HTML grid matrix cells
+  Object.keys(specFields).forEach(key => {
+    // Looks for spec cells containing labels matching key criteria
+    const labelNodes = Array.from(document.querySelectorAll('.spec-cell label'));
+    const targetLabel = labelNodes.find(lbl => lbl.textContent.toLowerCase() === key);
+    if (targetLabel && targetLabel.nextElementSibling) {
+      targetLabel.nextElementSibling.textContent = specFields[key];
+    }
+  });
+
+  // 2. Toggle low status infrastructure nodes (active/inactive states)
+  const hardwareNodes = {
+    'gateway': systemMetrics.oemGatewayConnected,
+    'ai': systemMetrics.aiEngineOnline,
+    'sync': systemMetrics.databaseSynced,
+    'memory': systemMetrics.localCacheActive,
+    'scanner': systemMetrics.rp1210Connected
+  };
+
+  // Toggle opacity and success text color based on connection state variables
+  Object.keys(hardwareNodes).forEach(nodeName => {
+    const nodeLabelNodes = Array.from(document.querySelectorAll('.node-cell span'));
+    const targetSpan = nodeLabelNodes.find(span => span.textContent.toLowerCase().includes(nodeName));
+    if (targetSpan) {
+      const containerCell = targetSpan.closest('.node-cell');
+      if (hardwareNodes[nodeName]) {
+        containerCell.classList.add('active');
+      } else {
+        containerCell.classList.remove('active');
+      }
+    }
+  });
+}
