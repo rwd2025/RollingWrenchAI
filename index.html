@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rolling Wrench AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <button class="square" data-module="Menu">☰</button>
+    <div class="brand-logo">⚙️</div>
+    <div class="brand">
+      <h1>ROLLING <span>WRENCH</span> AI</h1>
+      <p>DIESEL DIAGNOSTICS & REPAIR PLATFORM</p>
+    </div>
+    <button class="bell" data-module="Notifications">🔔<b>3</b></button>
+    <button class="square" data-module="Settings">⚙️</button>
+  </header>
+
+  <section class="active-strip">
+    <div><i></i><b>ACTIVE TRUCK</b></div>
+    <span>CUMMINS X15</span>
+    <span>VIN: 1XP4D49X8KD123456</span>
+    <strong>🔗 CONNECTED</strong>
+  </section>
+
+  <main>
+    <section class="top-grid">
+      <article class="panel time-panel">
+        <div class="card-top"><h3>TIME CLOCK</h3><p class="stopped">○ STOPPED</p></div>
+        <div class="clock-face">
+          <div>
+            <div class="clock" data-clock-time>00:00:00</div>
+            <small>Labor Clock</small>
+          </div>
+          <span class="clock-ring"></span>
+        </div>
+        <small>Today's Earnings</small>
+        <div class="money" data-clock-pay>$0.00</div>
+        <em>Stopped</em>
+        <button data-module="TIME CLOCK">CLOCK IN</button>
+      </article>
+
+      <article class="panel truck-panel">
+        <h3>ACTIVE TRUCK</h3>
+        <div class="truck-wrap">
+          <div class="truck-art">
+            <svg viewBox="0 0 160 95" aria-hidden="true">
+              <defs>
+                <linearGradient id="cab" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#20262d"/><stop offset="1" stop-color="#05070a"/>
+                </linearGradient>
+                <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#151a20"/><stop offset="1" stop-color="#05070a"/>
+                </linearGradient>
+              </defs>
+              <path d="M17 61 L29 31 Q34 19 48 19 H73 V70 H12 V65 Q12 61 17 61Z" fill="url(#cab)" stroke="#9ea7b3" stroke-width="2"/>
+              <path d="M76 18 H145 V70 H76Z" fill="url(#box)" stroke="#9ea7b3" stroke-width="2"/>
+              <path d="M31 29 H53 V49 H24 L30 32Q31 30 31 29Z" fill="#263746" stroke="#d5dce4" stroke-width="1.5"/>
+              <path d="M83 27 H137 M83 38 H137 M83 49 H137 M83 60 H137" stroke="#313a45" stroke-width="3"/>
+              <circle cx="38" cy="72" r="12" fill="#0a0c10" stroke="#d0d5dc" stroke-width="3"/>
+              <circle cx="91" cy="72" r="12" fill="#0a0c10" stroke="#d0d5dc" stroke-width="3"/>
+              <circle cx="126" cy="72" r="12" fill="#0a0c10" stroke="#d0d5dc" stroke-width="3"/>
+              <circle cx="38" cy="72" r="5" fill="#646b75"/><circle cx="91" cy="72" r="5" fill="#646b75"/><circle cx="126" cy="72" r="5" fill="#646b75"/>
+              <rect x="14" y="54" width="10" height="7" rx="2" fill="#ff6600"/>
+            </svg>
+          </div>
+          <div class="truck-info">
+            <h2>2020 FREIGHTLINER<br>CASCADIA 126</h2>
+            <p>VIN: 1XP4D49X8KD123456</p>
+            <p>Engine: CUMMINS X15</p>
+            <p>CPL: 4342</p>
+            <p>Odometer: 453,218 mi</p>
+            <p>Hours: 8,912 HRS</p>
+          </div>
+        </div>
+        <button data-module="TRUCK PROFILE">TRUCK PROFILE</button>
+      </article>
+
+      <article class="panel status-panel">
+        <h3>SYSTEM STATUS</h3>
+        <div class="health-meter">
+          <div class="meter-arc"></div>
+          <div class="meter-core"><b>98<span>%</span></b><small>HEALTH</small></div>
+        </div>
+        <p class="normal">All Systems Normal ✓</p>
+        <button data-module="SYSTEM STATUS">VIEW DETAILS</button>
+      </article>
+    </section>
+
+    <section class="ask-pill" data-module="AI ASSISTANT">
+      <div class="rw-badge">RW</div>
+      <div class="ask-copy">
+        <b>Ask Rolling Wrench AI...</b>
+        <p>VIN lookup, parts, fault codes, repair steps, quotes, invoices, and job history.</p>
+      </div>
+      <button class="mic">🎙️</button>
+      <button class="dots">⋮</button>
+    </section>
+
+    <section class="tools" id="tools"></section>
+
+    <section class="bottom-widgets">
+      <article class="mini">
+        <div class="mini-head"><h3>⚠ TOP FAULTS TODAY</h3><button data-module="FAULT DOCTOR">View All</button></div>
+        <div class="row"><div><b>P2009</b><small>DPF Differential Pressure</small></div><em>4</em></div>
+        <div class="row"><div><b>SPN 157</b><small>EGR Position Sensor</small></div><em>3</em></div>
+        <div class="row"><div><b>SPN 111 FMI 5</b><small>Coolant Temperature High</small></div><em>2</em></div>
+        <div class="row"><div><b>U0101</b><small>Lost Comm w/ ECM</small></div><em>1</em></div>
+      </article>
+
+      <article class="mini">
+        <div class="mini-head"><h3>RECENT WORK ORDERS</h3><button data-module="WORK ORDERS">View All</button></div>
+        <div class="job"><div><b>WO-10045</b><small>DPF Cleaning</small></div><em class="active">IN PROGRESS</em></div>
+        <div class="job"><div><b>WO-10044</b><small>EGR Valve Replacement</small></div><em>COMPLETE</em></div>
+        <div class="job"><div><b>WO-10043</b><small>Coolant Temp Sensor</small></div><em>COMPLETE</em></div>
+        <div class="job"><div><b>WO-10042</b><small>Air Leak Inspection</small></div><em>COMPLETE</em></div>
+      </article>
+
+      <article class="mini earnings">
+        <div class="mini-head"><h3>EARNINGS SUMMARY</h3><button>This Week⌄</button></div>
+        <div class="week">$3,842.50</div>
+        <small>Total Earnings</small>
+        <div class="bars"><i style="height:42%"></i><i style="height:58%"></i><i style="height:50%"></i><i style="height:64%"></i><i style="height:74%"></i><i style="height:88%"></i><i class="off" style="height:35%"></i></div>
+        <div class="days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <button class="reports" data-module="REPORTS">VIEW REPORTS</button>
+      </article>
+    </section>
+
+    <section class="system-row">
+      <div>⚙️<b>GATEWAY</b><span>CONNECTED</span><i></i></div>
+      <div>🧠<b>AI SYSTEM</b><span>ONLINE</span><i></i></div>
+      <div>☁️<b>SUPABASE</b><span>SYNCED</span><i></i></div>
+      <div>ᛒ<b>BLUETOOTH</b><span>CONNECTED</span><i></i></div>
+    </section>
+  </main>
+
+  <nav>
+    <button class="on" data-tab="HOME">⌂<b>HOME</b></button>
+    <button data-tab="DOCTOR">⚕<b>DOCTOR</b></button>
+    <button data-tab="PARTS">⚙️<b>PARTS</b></button>
+    <button data-tab="REPAIR">🛠<b>REPAIR</b></button>
+    <button data-tab="MORE">•••<b>MORE</b></button>
+  </nav>
+
+  <aside id="drawer" class="drawer">
+    <div class="drawer-head"><h2 id="drawerTitle">Module</h2><button id="closeDrawer">×</button></div>
+    <div id="drawerBody"></div>
+  </aside>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
