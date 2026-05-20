@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Rolling Wrench AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn" data-action="menu">☰</button>
+      <div class="brand">
+        <div class="logo-mark">⚙</div>
+        <div>
+          <h1>ROLLING <span>WRENCH</span> AI</h1>
+          <p>Diesel Diagnostics & Repair Platform</p>
+        </div>
+      </div>
+      <div class="top-actions"><button class="icon-btn">🔔<b>3</b></button><button class="icon-btn">⚙</button></div>
+    </header>
+
+    <section class="status-strip">
+      <strong><i></i> ACTIVE TRUCK</strong><span>CUMMINS X15</span><span>VIN: 1XP4D49X8KD123456</span><em>🔗 CONNECTED</em>
+    </section>
+
+    <nav class="tabs" aria-label="Main views">
+      <button class="active" data-view="home">⌂ Home</button><button data-view="doctor">🩺 Doctor</button><button data-view="scan">▣ Scan</button><button data-view="repair">🔧 Repair</button><button data-view="ecm">⚙ ECM</button><button data-view="more">••• More</button>
+    </nav>
+
+    <main>
+      <section id="home" class="view active">
+        <div class="ai-hero card glow">
+          <div class="rw">RW</div><div><h2>Ask Rolling Wrench AI</h2><p>VIN lookup, OEM parts, fault codes, repair steps, quotes, invoices, and job history.</p></div><button class="mic">🎙</button>
+        </div>
+        <div class="dash-grid">
+          <article class="card clock-card"><h3>Time Clock</h3><small class="green-dot">● ON THE CLOCK</small><div class="big">02:47:33</div><p>Today's Earnings</p><strong class="money">$642.75</strong><button class="primary">Clock Out</button></article>
+          <article class="card truck-card"><h3>Active Truck</h3><div class="truck-row"><div class="truck-art">🚛</div><div><h2>2020 Freightliner Cascadia 126</h2><p>VIN: 1XP4D49X8KD123456</p><p>Engine: Cummins X15</p><p>CPL: 4342</p><p>Odometer: 453,218 mi</p></div></div><button>Truck Profile</button></article>
+          <article class="card health-card"><h3>System Status</h3><div class="gauge"><span>98%</span></div><p class="ok">All Systems Normal ✓</p><button>View Details</button></article>
+        </div>
+        <div class="search card"><span>⌕</span><input placeholder="Search VIN, Part #, Symptoms, Fault Codes, Repairs..."/><button>▥</button></div>
+        <section class="module-grid" id="moduleGrid"></section>
+        <div class="bottom-grid">
+          <article class="card"><h3>⚠ Top Faults Today</h3><p>P2009 — DPF Differential Pressure <b>4</b></p><p>SPN 157 — EGR Position Sensor <b>3</b></p><p>SPN 111 FMI 5 — Coolant Temp High <b>2</b></p></article>
+          <article class="card"><h3>Recent Work Orders</h3><p>WO-10045 DPF Cleaning <b class="orange">In Progress</b></p><p>WO-10044 EGR Valve Replacement <b class="ok">Complete</b></p><p>WO-10043 Coolant Temp Sensor <b class="ok">Complete</b></p></article>
+          <article class="card"><h3>Earnings Summary</h3><strong class="money">$3,842.50</strong><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div><button>View Reports</button></article>
+        </div>
+      </section>
+
+      <section id="scan" class="view">
+        <div class="workstation">
+          <aside class="side-menu"><button class="active">9-Pin Scanner</button><button>Live Data</button><button>Fault Codes</button><button>ABS / Wheel Speed</button><button>Forced Regen</button><button>ECM Programming</button><button>Wiring / Schematics</button><button>Manuals / OCR</button></aside>
+          <div class="work-main">
+            <article class="card scanner"><h2>9-Pin Bluetooth Scanner</h2><div class="scanner-row"><div class="adapter">555-3215</div><div><p>Connection: <b class="ok">Connected</b></p><p>Adapter: RP1210</p><p>Protocol: J1939</p><p>CAN Activity: <b class="ok">Active</b></p><p>VIN: 1XP4D49X8KD123456</p></div><button class="primary">Connect Scanner</button></div></article>
+            <article class="card"><h2>Scanner Functions</h2><div class="function-grid"><button>〽 Live Data</button><button>⚠ Fault Codes</button><button>❄ Freeze Frame</button><button>✓ I/M Readiness</button><button>SPN / FMI</button><button>🔋 Battery Voltage</button><button>VIN Auto-Detect</button><button>● Data Record</button></div></article>
+            <article class="card abs"><h2>ABS / Wheel Speed Monitor</h2><table><tr><th>Axle</th><th>Left</th><th>Right</th><th>Status</th></tr><tr><td>Steer Axle</td><td>6</td><td>6</td><td class="ok">OK</td></tr><tr><td>Drive Axle 1</td><td>5</td><td class="bad">0</td><td class="bad">Fault</td></tr><tr><td>Drive Axle 2</td><td>5</td><td>5</td><td class="ok">OK</td></tr></table></article>
+            <article class="card"><h2>Forced Regen</h2><p>Soot Load <meter value=".52"></meter> 52%</p><p>Ash Load <meter value=".18"></meter> 18%</p><button class="success">Start Forced Regen</button><button>Regen Checklist</button></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="doctor" class="view"><article class="card full"><h2>Rolling Wrench AI Doctor</h2><textarea placeholder="Ask about SPN/FMI, symptoms, parts, repair steps, or quote notes..."></textarea><button class="primary">Analyze</button><div class="answer">Ready for guided troubleshooting.</div></article></section>
+      <section id="repair" class="view"><article class="card full"><h2>Repair HUD</h2><p>Step-by-step repair guide, work orders, procedures, notes, and history cards.</p><button class="primary">Create Work Order</button></article></section>
+      <section id="ecm" class="view"><article class="card full"><h2>ECM Programming Shell</h2><p>Backup ECM data, programming checklist, parameters, verify & validate workflow.</p><button class="primary">Open Programming Guide</button></article></section>
+      <section id="more" class="view"><article class="card full"><h2>More Tools</h2><p>Reports, settings, suppliers, DOT/GPS, camera/OCR, repair memory, and system sync.</p></article></section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
