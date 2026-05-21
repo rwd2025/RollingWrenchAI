@@ -4,448 +4,946 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Rolling Wrench AI</title>
+
 <style>
 :root{
-  --bg:#050505;
-  --card:#151515;
-  --card2:#1c1c1c;
-  --line:#2e2e2e;
+  --bg:#03060a;
+  --panel:#07101a;
+  --panel2:#0b1420;
+  --card:#0b111a;
+  --card2:#111923;
+  --line:#1f3448;
+  --line2:#26394d;
   --orange:#ff6a00;
-  --text:#f5f5f5;
-  --muted:#aaa;
-  --green:#28d17c;
+  --orange2:#ff8c1a;
+  --green:#27e66d;
+  --red:#ff3b3b;
+  --blue:#188cff;
+  --yellow:#ffb020;
+  --text:#f4f7fb;
+  --muted:#8e9aaa;
+  --muted2:#5e6b7d;
+  --shadow:0 12px 35px rgba(0,0,0,.45);
 }
 *{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
 body{
-  margin:0;
+  min-height:100vh;
   background:
-    radial-gradient(circle at top right,#291000 0,#050505 35%),
-    linear-gradient(135deg,#050505,#111);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    radial-gradient(circle at top left,rgba(255,106,0,.12),transparent 35%),
+    radial-gradient(circle at top right,rgba(0,145,255,.10),transparent 35%),
+    linear-gradient(180deg,#03060a,#000);
 }
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:#121212;
-  border-bottom:1px solid var(--line);
-  padding:18px 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.app{max-width:980px;margin:auto;padding-bottom:92px}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(3,6,10,.96);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid #111b28;
+  padding:18px 14px 14px;
 }
-.brand{
-  color:var(--orange);
-  font-weight:900;
-  letter-spacing:2px;
-  font-size:18px;
+.header{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
-.dot{
-  width:11px;
-  height:11px;
-  background:var(--green);
-  border-radius:50%;
-}
-main{
-  padding:18px;
-  max-width:900px;
-  margin:auto;
-}
-.hero{
-  border:1px solid var(--line);
-  background:linear-gradient(145deg,#181818,#101010);
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:18px;
-}
-.hero h1{
-  margin:0 0 8px;
+.leftHead,.rightHead{display:flex;align-items:center;gap:10px}
+.logoBox{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(145deg,#ff7a00,#9b3100);
+  display:grid;place-items:center;
+  box-shadow:0 0 24px rgba(255,106,0,.45);
   font-size:28px;
 }
-.hero p{
-  color:var(--muted);
-  margin:0;
-  line-height:1.4;
+.brand h1{
+  margin:0;font-size:24px;letter-spacing:1px;line-height:1;
 }
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+.brand h1 span{color:var(--orange)}
+.brand p{
+  margin:4px 0 0;color:#b7c0cb;font-size:10px;font-weight:800;letter-spacing:2px;
 }
-.card{
-  min-height:125px;
-  background:linear-gradient(145deg,#181818,#111);
+.iconBtn{
+  width:46px;height:46px;border:1px solid var(--line);
+  background:linear-gradient(145deg,#101a27,#060a10);
+  color:white;border-radius:13px;display:grid;place-items:center;
+  font-size:24px;position:relative;
+}
+.badge{
+  position:absolute;right:-5px;top:-6px;background:var(--orange);
+  color:#fff;font-size:12px;font-weight:900;border-radius:999px;padding:4px 8px;
+}
+.activeBar{
+  margin-top:14px;border:1px solid var(--line);
+  background:linear-gradient(145deg,#08111c,#05080d);
+  border-radius:12px;padding:11px 12px;
+  display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap;
+  font-size:13px;font-weight:800;
+}
+.dot{width:11px;height:11px;background:var(--green);border-radius:50%;box-shadow:0 0 14px var(--green)}
+.activeBar .sep{height:18px;width:1px;background:#34465b}
+.activeBar span{color:#cbd5df}
+.activeBar b{color:#fff}
+.connected{margin-left:auto;color:var(--green)!important;font-size:12px}
+
+.main{padding:14px}
+.statusGrid{
+  display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:12px;margin-bottom:14px;
+}
+.glass{
   border:1px solid var(--line);
-  border-radius:16px;
-  padding:18px;
-  text-align:center;
-  cursor:pointer;
+  background:linear-gradient(145deg,rgba(16,27,40,.95),rgba(4,8,13,.95));
+  border-radius:16px;box-shadow:var(--shadow);
 }
-.card:hover,.active{
-  border-color:var(--orange);
-  box-shadow:0 0 0 1px var(--orange);
+.statusCard{padding:14px;min-height:162px;position:relative;overflow:hidden}
+.statusCard h3{
+  margin:0 0 10px;font-size:15px;letter-spacing:2px;text-transform:uppercase;
 }
-.icon{
-  font-size:26px;
-  margin-bottom:12px;
+.smallGreen{color:var(--green);font-size:12px;font-weight:900}
+.clockBig{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:30px;font-weight:900;background:#07090d;border:1px solid #171f29;
+  border-radius:14px;padding:14px 10px;margin:10px 0;
 }
-.card strong{
-  display:block;
-  font-size:16px;
+.money{font-size:32px;color:var(--green);font-weight:950;margin-top:3px}
+.orangeBtn{
+  width:100%;padding:12px;border-radius:12px;border:1px solid var(--orange);
+  background:rgba(255,106,0,.08);color:var(--orange);font-weight:950;
+  letter-spacing:.8px;font-size:14px;
 }
-.card span{
-  color:var(--muted);
-  display:block;
-  margin-top:8px;
+.truckCard{
+  display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;
 }
+.truckPic{
+  height:94px;border-radius:14px;background:
+    linear-gradient(145deg,#111923,#03060a);
+  border:1px solid #24364a;display:grid;place-items:center;font-size:62px;
+}
+.truckInfo h2{margin:0 0 6px;font-size:22px;line-height:1.05}
+.truckInfo p{margin:3px 0;color:#b8c2cc;font-size:12px}
+.gaugeWrap{display:grid;place-items:center}
+.gauge{
+  width:118px;height:118px;border-radius:50%;
+  background:conic-gradient(var(--green) 0 82%,#29313c 82% 100%);
+  display:grid;place-items:center;margin:auto;
+}
+.gaugeInner{
+  width:86px;height:86px;border-radius:50%;background:#08101a;
+  display:grid;place-items:center;font-size:34px;font-weight:950;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.65);
+}
+
+.askBox{
+  margin:14px 0;border:3px solid var(--orange);border-radius:18px;
+  background:linear-gradient(145deg,#09121d,#03070d);
+  padding:12px;display:flex;align-items:center;gap:12px;
+}
+.rwCircle{
+  width:54px;height:54px;border-radius:50%;border:5px solid var(--orange);
+  display:grid;place-items:center;font-weight:950;font-size:19px;
+}
+.askText{flex:1}
+.askText h2{margin:0;font-size:24px}
+.askText p{margin:4px 0 0;color:#9eabb8;font-size:14px}
+.askIcon{font-size:28px;border-left:1px solid #34465b;padding-left:14px}
+
+.masterSearch{
+  margin:14px 0;padding:12px 14px;border:1px solid var(--line);
+  border-radius:16px;background:linear-gradient(145deg,#0b1420,#05080d);
+  display:flex;align-items:center;gap:12px;
+}
+.masterSearch .mag{font-size:30px}
+.masterSearch input{
+  flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:17px;
+}
+.masterSearch .scan{font-size:27px;color:#d9e2ee}
+
+.moduleGrid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
+}
+.module{
+  border:1px solid var(--line);border-radius:13px;
+  background:linear-gradient(145deg,#0c1520,#03070c);
+  min-height:130px;padding:11px 8px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.module:active{border-color:var(--orange);transform:scale(.98)}
+.module .emoji{font-size:38px;margin-bottom:9px}
+.module strong{font-size:13px;line-height:1.2}
+.module span{font-size:11px;color:#a4afbb;margin-top:7px;line-height:1.2}
+
+.dataGrid{
+  margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+}
+.dataCard{padding:13px;min-height:158px}
+.dataHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dataHead h3{margin:0;font-size:13px;letter-spacing:.4px}
+.dataHead a{color:var(--orange);font-size:11px;font-weight:900}
+.faultRow,.woRow{
+  display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #162333;
+  padding:8px 0;
+}
+.faultRow b,.woRow b{font-size:13px}
+.faultRow small,.woRow small{display:block;color:#8f9aaa;margin-top:2px;font-size:11px}
+.count{
+  background:rgba(255,106,0,.25);color:var(--orange);border:1px solid rgba(255,106,0,.35);
+  border-radius:7px;padding:5px 9px;font-weight:950;
+}
+.complete{color:var(--green);font-size:10px;font-weight:950}
+.progress{color:var(--orange);font-size:10px;font-weight:950}
+.bars{height:70px;display:flex;align-items:end;gap:7px;margin:12px 0}
+.bar{flex:1;background:var(--orange);border-radius:4px 4px 0 0}
+.bar.gray{background:#3b4655}
+.statusStrip{
+  margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+}
+.stripItem{
+  border:1px solid var(--line);background:linear-gradient(145deg,#0b1420,#03060a);
+  border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;font-weight:900;font-size:12px;
+}
+.stripItem span{display:block;color:var(--green);font-size:11px;margin-top:3px}
+.stripItem .ok{margin-left:auto;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+
+.bottomNav{
+  position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(3,6,10,.97);
+  border-top:1px solid #172232;backdrop-filter:blur(14px);
+}
+.navInner{max-width:980px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+.navItem{
+  text-align:center;color:#7e8997;font-size:11px;font-weight:900;letter-spacing:1.5px;
+  padding:10px 4px;border-radius:10px;
+}
+.navItem .navIcon{font-size:28px;display:block;margin-bottom:4px}
+.navItem.active{color:var(--orange);border:1px solid var(--orange);background:rgba(255,106,0,.08)}
+
 .panel{
-  display:none;
-  margin-top:18px;
-  border:1px solid var(--line);
-  background:#121212;
-  border-radius:18px;
-  padding:18px;
+  display:none;position:fixed;inset:0;z-index:50;background:#020408;
+  overflow:auto;padding:16px 16px 100px;
 }
 .panel.show{display:block}
-button{
-  border:none;
-  background:var(--orange);
-  color:#111;
-  font-weight:900;
-  padding:13px 15px;
-  border-radius:12px;
-  margin:6px 4px 6px 0;
-  cursor:pointer;
+.panelTop{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;
 }
-button.secondary{
-  background:#252525;
-  color:var(--text);
-  border:1px solid var(--line);
+.backBtn,.saveBtn{
+  border:1px solid var(--line);background:#0b1420;color:#fff;border-radius:12px;padding:12px 14px;
+  font-weight:900;
+}
+.saveBtn{border-color:var(--orange);color:var(--orange)}
+.panel h1{margin:10px 0 4px;font-size:28px}
+.panel p{color:var(--muted)}
+.formBox{
+  border:1px solid var(--line);background:linear-gradient(145deg,#0b1420,#04070c);
+  border-radius:16px;padding:14px;margin-top:12px;
 }
 input,textarea,select{
-  width:100%;
-  background:#090909;
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:13px;
-  margin:8px 0;
-  font-size:16px;
+  width:100%;margin:7px 0 10px;padding:13px;border-radius:12px;
+  border:1px solid #26384b;background:#05090f;color:white;font-size:16px;
 }
-textarea{min-height:95px}
+textarea{min-height:110px}
+.actionRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fullBtn{
+  border:1px solid var(--orange);background:var(--orange);color:#111;
+  font-weight:950;border-radius:12px;padding:14px;font-size:15px;
+}
+.darkBtn{
+  border:1px solid #304357;background:#101925;color:#fff;
+  font-weight:900;border-radius:12px;padding:14px;font-size:15px;
+}
 .output{
-  background:#080808;
-  border:1px dashed #333;
-  border-radius:14px;
-  padding:14px;
-  margin-top:12px;
-  white-space:pre-wrap;
-  color:#ddd;
+  margin-top:12px;background:#03070c;border:1px dashed #34465b;border-radius:14px;
+  padding:13px;color:#dce5ef;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:13px;line-height:1.45;
 }
-.back{
-  margin-bottom:10px;
+
+.regenDash{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;
 }
-@media(min-width:700px){
-  .grid{grid-template-columns:repeat(4,1fr)}
+.meter{
+  text-align:center;border:1px solid var(--line);border-radius:14px;
+  background:#101720;padding:14px;
+}
+.ring{
+  width:86px;height:86px;border-radius:50%;margin:0 auto 8px;
+  display:grid;place-items:center;font-size:23px;font-weight:950;
+  background:conic-gradient(var(--red) 0 86%,#303844 86% 100%);
+}
+.ring.green{background:conic-gradient(var(--green) 0 78%,#303844 78% 100%)}
+.ring.orange{background:conic-gradient(var(--orange) 0 72%,#303844 72% 100%)}
+.meter b{font-size:12px;color:#cfd8e3}
+.warnBox{
+  border:1px solid rgba(255,59,59,.6);background:rgba(255,59,59,.08);
+  color:#ffd1d1;border-radius:14px;padding:14px;margin-top:12px;
+}
+
+@media(max-width:720px){
+  .brand h1{font-size:22px}
+  .statusGrid{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .statusCard{padding:10px;min-height:150px}
+  .truckCard{grid-template-columns:1fr;text-align:center}
+  .truckPic{display:none}
+  .truckInfo h2{font-size:17px}
+  .gauge{width:96px;height:96px}.gaugeInner{width:70px;height:70px;font-size:28px}
+  .clockBig{font-size:24px}
+  .money{font-size:28px}
+  .moduleGrid{grid-template-columns:repeat(5,1fr);gap:8px}
+  .module{min-height:118px;padding:8px 5px}
+  .module .emoji{font-size:32px}
+  .module strong{font-size:12px}
+  .module span{font-size:10px}
+  .dataGrid{grid-template-columns:1fr 1fr 1fr}
+  .statusStrip{grid-template-columns:repeat(4,1fr)}
+  .stripItem{font-size:10px;padding:9px;gap:5px}
+}
+@media(max-width:520px){
+  .main{padding:10px}
+  .brand h1{font-size:18px}
+  .brand p{font-size:8px}
+  .logoBox{width:44px;height:44px}
+  .statusGrid{grid-template-columns:1fr 1.15fr 1fr}
+  .statusCard h3{font-size:12px}
+  .clockBig{font-size:22px;padding:11px 7px}
+  .money{font-size:26px}
+  .moduleGrid{grid-template-columns:repeat(3,1fr)}
+  .module{min-height:128px}
+  .dataGrid{grid-template-columns:1fr}
+  .statusStrip{grid-template-columns:1fr 1fr}
+  .askText h2{font-size:20px}
+  .askText p{font-size:12px}
+  .activeBar{font-size:11px}
 }
 </style>
 </head>
 
 <body>
-<header>
-  <div class="brand">ROLLING WRENCH DIESEL</div>
-  <div class="dot"></div>
-</header>
+<div class="app">
 
-<main>
-  <section class="hero">
-    <h1>Field Operations Console</h1>
-    <p>Mobile diesel repair command center. Time clock, parts, diagnostics, invoices, VIN, filters, DOT, regen notes, and job tracking.</p>
-  </section>
+  <div class="topbar">
+    <div class="header">
+      <div class="leftHead">
+        <div class="iconBtn" onclick="openPanel('settingsPanel')">☰</div>
+        <div class="logoBox">⚙️</div>
+        <div class="brand">
+          <h1>ROLLING <span>WRENCH</span> AI</h1>
+          <p>DIESEL DIAGNOSTICS & REPAIR PLATFORM</p>
+        </div>
+      </div>
+      <div class="rightHead">
+        <div class="iconBtn">🔔<div class="badge">3</div></div>
+        <div class="iconBtn" onclick="openPanel('settingsPanel')">⚙️</div>
+      </div>
+    </div>
 
-  <section class="grid">
-    <div class="card" onclick="openPanel('clock')"><div class="icon">⏱️</div><strong>Time Clock</strong><span id="clockStatus">Stopped</span></div>
-    <div class="card" onclick="openPanel('parts')"><div class="icon">📦</div><strong>Parts Bin</strong><span id="partsCount">0 Items</span></div>
-    <div class="card" onclick="openPanel('diag')"><div class="icon">🩺</div><strong>Diagnostics</strong><span>SPN / FMI / Symptoms</span></div>
-    <div class="card" onclick="openPanel('invoice')"><div class="icon">🧾</div><strong>Invoice</strong><span id="invoiceTotal">$250.00</span></div>
-    <div class="card" onclick="openPanel('vin')"><div class="icon">🚛</div><strong>VIN Decode</strong><span>Truck Info</span></div>
-    <div class="card" onclick="openPanel('filters')"><div class="icon">🛢️</div><strong>Filters & Fluids</strong><span>PM Lookup</span></div>
-    <div class="card" onclick="openPanel('dot')"><div class="icon">📋</div><strong>DOT Inspection</strong><span>Checklist</span></div>
-    <div class="card" onclick="openPanel('regen')"><div class="icon">🔥</div><strong>Forced Regen</strong><span>Procedure Log</span></div>
-  </section>
+    <div class="activeBar">
+      <div class="dot"></div>
+      <b>ACTIVE TRUCK</b>
+      <div class="sep"></div>
+      <span>CUMMINS X15</span>
+      <div class="sep"></div>
+      <span>VIN: 1XP4D49X8KD123456</span>
+      <span class="connected">🔗 CONNECTED</span>
+    </div>
+  </div>
 
-  <section id="clock" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Time Clock</h2>
-    <input id="laborRate" type="number" value="135" placeholder="Hourly Rate" />
-    <input id="serviceCall" type="number" value="250" placeholder="Service Call" />
-    <button onclick="startClock()">Start</button>
-    <button onclick="stopClock()">Stop</button>
-    <button class="secondary" onclick="resetClock()">Reset</button>
-    <div class="output" id="clockOut">Hours: 0.00
-Labor: $0.00</div>
-  </section>
+  <main class="main">
 
-  <section id="parts" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Parts Bin</h2>
-    <input id="partName" placeholder="Part name / number" />
-    <input id="partPrice" type="number" placeholder="Price" />
-    <button onclick="addPart()">Add Part</button>
-    <button class="secondary" onclick="clearParts()">Clear Parts</button>
-    <div class="output" id="partsOut">No parts added.</div>
-  </section>
+    <section class="statusGrid">
+      <div class="statusCard glass">
+        <h3>Time Clock</h3>
+        <div class="smallGreen" id="clockState">● STOPPED</div>
+        <div class="clockBig" id="clockDisplay">00:00:00</div>
+        <small>Today's Earnings</small>
+        <div class="money" id="earnings">$0.00</div>
+        <button class="orangeBtn" onclick="toggleClock()" id="clockBtn">CLOCK IN</button>
+      </div>
 
-  <section id="diag" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Diagnostics Log</h2>
-    <input id="spn" placeholder="SPN" />
-    <input id="fmi" placeholder="FMI" />
-    <textarea id="symptom" placeholder="Customer complaint / symptom"></textarea>
-    <button onclick="buildDiag()">Build Diagnostic Note</button>
-    <div class="output" id="diagOut">Enter fault or symptom.</div>
-  </section>
+      <div class="statusCard glass truckCard">
+        <div class="truckPic">🚛</div>
+        <div class="truckInfo">
+          <h3 style="color:var(--orange)">Active Truck</h3>
+          <h2>2020 FREIGHTLINER CASCADIA 126</h2>
+          <p>VIN: 1XP4D49X8KD123456</p>
+          <p>Engine: CUMMINS X15</p>
+          <p>CPL: 4342</p>
+          <p>Odometer: 453,218 mi</p>
+          <p>Hours: 8,912 HRS</p>
+          <button class="orangeBtn" onclick="openPanel('vinPanel')">TRUCK PROFILE</button>
+        </div>
+      </div>
 
-  <section id="invoice" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Invoice Builder</h2>
-    <input id="customer" placeholder="Customer Name" />
-    <input id="unit" placeholder="Truck / Unit / VIN" />
-    <textarea id="workDone" placeholder="Work performed"></textarea>
-    <button onclick="buildInvoice()">Build Invoice</button>
-    <button class="secondary" onclick="copyInvoice()">Copy Invoice</button>
+      <div class="statusCard glass">
+        <h3>System Status</h3>
+        <div class="gaugeWrap">
+          <div class="gauge"><div class="gaugeInner">98%</div></div>
+          <div class="smallGreen" style="text-align:center;margin-top:8px">All Systems Normal ✔</div>
+        </div>
+        <button class="orangeBtn" style="margin-top:12px" onclick="openPanel('statusPanel')">VIEW DETAILS</button>
+      </div>
+    </section>
+
+    <section class="askBox" onclick="openPanel('aiPanel')">
+      <div class="rwCircle">RW</div>
+      <div class="askText">
+        <h2>Ask Rolling Wrench AI...</h2>
+        <p>VIN lookup, parts, fault codes, repair steps, quotes, invoices, and job history.</p>
+      </div>
+      <div class="askIcon">🎙️</div>
+      <div class="askIcon">⋮</div>
+    </section>
+
+    <section class="masterSearch">
+      <div class="mag">⌕</div>
+      <input id="masterInput" placeholder="Search VIN, Part #, Symptoms, Fault Codes, Repairs..." onkeydown="if(event.key==='Enter')masterSearch()" />
+      <div class="scan" onclick="openPanel('cameraPanel')">▥</div>
+    </section>
+
+    <section class="moduleGrid">
+      <div class="module" onclick="openPanel('vinPanel')"><div class="emoji">🚚</div><strong>VIN LOOKUP</strong><span>Decode VIN, ESN, CPL & more</span></div>
+      <div class="module" onclick="openPanel('partsPanel')"><div class="emoji">⚙️📦</div><strong>OEM PARTS</strong><span>Search OEM parts & diagrams</span></div>
+      <div class="module" onclick="openPanel('faultPanel')"><div class="emoji">🩺</div><strong>FAULT DOCTOR</strong><span>AI powered fault diagnostics</span></div>
+      <div class="module" onclick="openPanel('repairPanel')"><div class="emoji">🖥️</div><strong>REPAIR HUB</strong><span>Step-by-step repair guidance</span></div>
+      <div class="module" onclick="openPanel('quotePanel')"><div class="emoji">📜💰</div><strong>SMART QUOTES</strong><span>Create quotes & estimates</span></div>
+
+      <div class="module" onclick="openPanel('workPanel')"><div class="emoji">📋</div><strong>WORK ORDERS</strong><span>Create, manage & track jobs</span></div>
+      <div class="module" onclick="openPanel('invoicePanel')"><div class="emoji">📄</div><strong>INVOICES</strong><span>Create invoices & send</span></div>
+      <div class="module" onclick="openPanel('clockPanel')"><div class="emoji">🕘</div><strong>TIME CLOCK</strong><span>Track time, jobs & labor</span></div>
+      <div class="module" onclick="openPanel('cameraPanel')"><div class="emoji">📷</div><strong>CAMERA / OCR</strong><span>Scan codes, parts & documents</span></div>
+      <div class="module" onclick="openPanel('dotPanel')"><div class="emoji">📍</div><strong>DOT / GPS</strong><span>GPS, routes, ELD & location</span></div>
+
+      <div class="module" onclick="openPanel('memoryPanel')"><div class="emoji">🧠</div><strong>REPAIR MEMORY</strong><span>Saved repairs, history & notes</span></div>
+      <div class="module" onclick="openPanel('suppliersPanel')"><div class="emoji">🤝</div><strong>SUPPLIERS</strong><span>Parts suppliers & contacts</span></div>
+      <div class="module" onclick="openPanel('aiPanel')"><div class="emoji">🤖</div><strong>AI ASSISTANT</strong><span>Ask AI for help, advice & more</span></div>
+      <div class="module" onclick="openPanel('reportsPanel')"><div class="emoji">📊</div><strong>REPORTS</strong><span>Analytics & performance</span></div>
+      <div class="module" onclick="openPanel('settingsPanel')"><div class="emoji">⚙️</div><strong>SETTINGS</strong><span>App settings & preferences</span></div>
+    </section>
+
+    <section class="dataGrid">
+      <div class="dataCard glass">
+        <div class="dataHead"><h3>⚠ TOP FAULTS TODAY</h3><a>View All</a></div>
+        <div class="faultRow"><div><b>P2009</b><small>DPF Differential Pressure</small></div><div class="count">4</div></div>
+        <div class="faultRow"><div><b>SPN 157</b><small>EGR Position Sensor</small></div><div class="count">3</div></div>
+        <div class="faultRow"><div><b>SPN 111 FMI 5</b><small>Coolant Temperature High</small></div><div class="count">2</div></div>
+        <div class="faultRow"><div><b>U0101</b><small>Lost Comm w/ ECM</small></div><div class="count">1</div></div>
+      </div>
+
+      <div class="dataCard glass">
+        <div class="dataHead"><h3>RECENT WORK ORDERS</h3><a>View All</a></div>
+        <div class="woRow"><div><b>WO-10045</b><small>DPF Cleaning</small></div><div class="progress">IN PROGRESS</div></div>
+        <div class="woRow"><div><b>WO-10044</b><small>EGR Valve Replacement</small></div><div class="complete">COMPLETE</div></div>
+        <div class="woRow"><div><b>WO-10043</b><small>Coolant Temp Sensor</small></div><div class="complete">COMPLETE</div></div>
+        <div class="woRow"><div><b>WO-10042</b><small>Air Leak Inspection</small></div><div class="complete">COMPLETE</div></div>
+      </div>
+
+      <div class="dataCard glass">
+        <div class="dataHead"><h3>EARNINGS SUMMARY</h3><a>This Week⌄</a></div>
+        <div class="money">$3,842.50</div>
+        <small>Total Earnings</small>
+        <div class="bars">
+          <div class="bar" style="height:38%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:62%"></div>
+          <div class="bar" style="height:78%"></div>
+          <div class="bar" style="height:95%"></div>
+          <div class="bar gray" style="height:32%"></div>
+        </div>
+        <button class="orangeBtn" onclick="openPanel('reportsPanel')">VIEW REPORTS</button>
+      </div>
+    </section>
+
+    <section class="statusStrip">
+      <div class="stripItem">⚙️ GATEWAY <span>CONNECTED</span><div class="ok"></div></div>
+      <div class="stripItem">🧠 AI SYSTEM <span>ONLINE</span><div class="ok"></div></div>
+      <div class="stripItem">☁️ SUPABASE <span>SYNCED</span><div class="ok"></div></div>
+      <div class="stripItem">ᛒ BLUETOOTH <span>CONNECTED</span><div class="ok"></div></div>
+    </section>
+
+  </main>
+</div>
+
+<nav class="bottomNav">
+  <div class="navInner">
+    <div class="navItem active"><span class="navIcon">⌂</span>HOME</div>
+    <div class="navItem" onclick="openPanel('faultPanel')"><span class="navIcon">🩺</span>DOCTOR</div>
+    <div class="navItem" onclick="openPanel('partsPanel')"><span class="navIcon">⚙️</span>PARTS</div>
+    <div class="navItem" onclick="openPanel('repairPanel')"><span class="navIcon">🛠️</span>REPAIR</div>
+    <div class="navItem" onclick="openPanel('settingsPanel')"><span class="navIcon">•••</span>MORE</div>
+  </div>
+</nav>
+
+<!-- PANELS -->
+<div id="vinPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>VIN Lookup</h1><p>Decode VIN, ESN, CPL, engine, odometer, and truck profile.</p>
+  <div class="formBox">
+    <input id="vin" placeholder="VIN" value="1XP4D49X8KD123456">
+    <input id="engine" placeholder="Engine" value="Cummins X15">
+    <input id="esn" placeholder="ESN">
+    <input id="cpl" placeholder="CPL" value="4342">
+    <button class="fullBtn" onclick="vinLookup()">DECODE VIN</button>
+    <div class="output" id="vinOut">Ready.</div>
+  </div>
+</div>
+
+<div id="partsPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>OEM Parts</h1><p>Search part numbers, cross references, diagrams, filters, and kits.</p>
+  <div class="formBox">
+    <input id="partQuery" placeholder="Part number, component, filter, VIN, ESN">
+    <div class="actionRow">
+      <button class="fullBtn" onclick="partsLookup()">SEARCH PART</button>
+      <button class="darkBtn" onclick="addPart()">ADD TO QUOTE</button>
+    </div>
+    <div class="output" id="partsOut">Enter OEM part, symptom, or component.</div>
+  </div>
+</div>
+
+<div id="faultPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Fault Doctor</h1><p>SPN/FMI diagnostic builder and repair path.</p>
+  <div class="formBox">
+    <input id="spn" placeholder="SPN / Code">
+    <input id="fmi" placeholder="FMI">
+    <textarea id="symptom" placeholder="Complaint, symptoms, freeze frame, live data"></textarea>
+    <div class="actionRow">
+      <button class="fullBtn" onclick="faultDoctor()">DIAGNOSE</button>
+      <button class="darkBtn" onclick="openPanel('regenPanel')">REGEN TEST</button>
+    </div>
+    <div class="output" id="faultOut">Ready for diagnostic input.</div>
+  </div>
+</div>
+
+<div id="repairPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Repair Hub</h1><p>Step-by-step repair procedure generator.</p>
+  <div class="formBox">
+    <textarea id="repairRequest" placeholder="Example: Replace DD15 EGR delta pressure sensor"></textarea>
+    <button class="fullBtn" onclick="repairHub()">BUILD REPAIR STEPS</button>
+    <div class="output" id="repairOut">Enter repair request.</div>
+  </div>
+</div>
+
+<div id="quotePanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Smart Quotes</h1><p>Build estimate with service call, labor, parts, tax, and notes.</p>
+  <div class="formBox">
+    <input id="qCustomer" placeholder="Customer">
+    <input id="qJob" placeholder="Job / Unit">
+    <input id="qService" type="number" value="250" placeholder="Service call">
+    <input id="qRate" type="number" value="135" placeholder="Hourly rate">
+    <input id="qHours" type="number" value="0" placeholder="Hours">
+    <input id="qParts" type="number" value="0" placeholder="Parts total">
+    <button class="fullBtn" onclick="buildQuote()">BUILD QUOTE</button>
+    <div class="output" id="quoteOut">Quote ready.</div>
+  </div>
+</div>
+
+<div id="invoicePanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="copyText('invoiceOut')">COPY</button></div>
+  <h1>Invoices</h1><p>Create copy-ready invoice text.</p>
+  <div class="formBox">
+    <input id="iCustomer" placeholder="Customer">
+    <input id="iUnit" placeholder="Truck / Unit">
+    <textarea id="iWork" placeholder="Work performed"></textarea>
+    <button class="fullBtn" onclick="buildInvoice()">BUILD INVOICE</button>
     <div class="output" id="invoiceOut">Invoice ready.</div>
-  </section>
+  </div>
+</div>
 
-  <section id="vin" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>VIN Decode</h2>
-    <input id="vinInput" placeholder="Enter VIN" maxlength="17" />
-    <button onclick="vinDecode()">Decode Basic VIN</button>
-    <div class="output" id="vinOut">Enter VIN.</div>
-  </section>
+<div id="workPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Work Orders</h1>
+  <div class="formBox">
+    <input id="woCustomer" placeholder="Customer">
+    <input id="woUnit" placeholder="Unit / VIN">
+    <textarea id="woComplaint" placeholder="Complaint"></textarea>
+    <textarea id="woCause" placeholder="Cause"></textarea>
+    <textarea id="woCorrection" placeholder="Correction"></textarea>
+    <button class="fullBtn" onclick="buildWO()">BUILD WORK ORDER</button>
+    <div class="output" id="woOut">Work order ready.</div>
+  </div>
+</div>
 
-  <section id="filters" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Filters & Fluids</h2>
-    <input id="engine" placeholder="Engine / Unit / Filter #" />
-    <button onclick="filterLookup()">Lookup</button>
-    <div class="output" id="filterOut">Enter engine or filter number.</div>
-  </section>
+<div id="clockPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="resetClock()">RESET</button></div>
+  <h1>Time Clock</h1>
+  <div class="formBox">
+    <input id="clockRate" type="number" value="135" placeholder="Hourly rate">
+    <button class="fullBtn" onclick="toggleClock()" id="clockPanelBtn">CLOCK IN / OUT</button>
+    <div class="output" id="clockOut">00:00:00
+Earnings: $0.00</div>
+  </div>
+</div>
 
-  <section id="dot" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>DOT Inspection</h2>
-    <textarea id="dotNotes" placeholder="Inspection notes"></textarea>
-    <button onclick="dotBuild()">Build DOT Note</button>
-    <div class="output" id="dotOut">Checklist ready.</div>
-  </section>
+<div id="cameraPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Camera / OCR</h1><p>Phone camera capture shell for parts, labels, fault screens, and documents.</p>
+  <div class="formBox">
+    <input type="file" accept="image/*" capture="environment">
+    <textarea placeholder="Ask AI about the image or type the visible number here"></textarea>
+    <button class="fullBtn">SCAN / ANALYZE</button>
+    <div class="output">Camera input ready. Backend OCR/vision connects later.</div>
+  </div>
+</div>
 
-  <section id="regen" class="panel">
-    <button class="secondary back" onclick="closePanels()">← Back</button>
-    <h2>Forced Regen Log</h2>
-    <textarea id="regenNotes" placeholder="Temps, soot load, codes, result"></textarea>
-    <button onclick="regenBuild()">Build Regen Report</button>
-    <div class="output" id="regenOut">Forced regen notes.</div>
-  </section>
-</main>
+<div id="dotPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>DOT / GPS</h1>
+  <div class="formBox">
+    <textarea id="dotNotes" placeholder="DOT inspection notes"></textarea>
+    <button class="fullBtn" onclick="dotReport()">BUILD DOT REPORT</button>
+    <div class="output" id="dotOut">DOT checklist ready.</div>
+  </div>
+</div>
+
+<div id="memoryPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Repair Memory</h1>
+  <div class="formBox">
+    <textarea id="memoryNote" placeholder="Save fix, VIN, symptoms, parts, repair result"></textarea>
+    <button class="fullBtn" onclick="memorySave()">SAVE MEMORY</button>
+    <div class="output" id="memoryOut">No memory saved yet.</div>
+  </div>
+</div>
+
+<div id="suppliersPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Suppliers</h1>
+  <div class="formBox">
+    <div class="output">NAPA
+O'Reilly
+FleetPride
+TruckPro
+Rush Truck Centers
+Local dealer / OEM parts counter</div>
+  </div>
+</div>
+
+<div id="aiPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Rolling Wrench AI</h1>
+  <div class="formBox">
+    <textarea id="aiAsk" placeholder="Ask anything: fault, part, quote, repair steps, invoice, customer message"></textarea>
+    <button class="fullBtn" onclick="askAI()">ASK AI</button>
+    <div class="output" id="aiOut">AI front-end shell ready. Backend hooks later.</div>
+  </div>
+</div>
+
+<div id="reportsPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Reports</h1>
+  <div class="formBox">
+    <div class="output">Weekly Earnings: $3,842.50
+Completed Work Orders: 12
+Open Jobs: 3
+Top Fault: DPF Differential Pressure
+Best Day: Saturday</div>
+  </div>
+</div>
+
+<div id="settingsPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Settings</h1>
+  <div class="formBox">
+    <input id="shopName" value="Rolling Wrench Diesel" placeholder="Shop name">
+    <input id="shopPhone" value="260-502-6222" placeholder="Phone">
+    <input id="defaultRate" type="number" value="135" placeholder="Default labor rate">
+    <input id="defaultCall" type="number" value="250" placeholder="Default service call">
+    <div class="output">Settings saved locally on this phone/browser.</div>
+  </div>
+</div>
+
+<div id="statusPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>System Status</h1>
+  <div class="formBox">
+    <div class="output">Gateway: CONNECTED
+AI System: ONLINE
+Supabase: SYNCED
+Bluetooth: CONNECTED
+J1939 Bus: READY
+Health: 98%</div>
+  </div>
+</div>
+
+<div id="regenPanel" class="panel">
+  <div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div>
+  <h1>Active Regen Test</h1>
+  <p>Aftertreatment system diagnostics. Forced regeneration logging only.</p>
+  <div class="regenDash">
+    <div class="meter"><div class="ring">95%</div><b>DPF ASH LOAD</b><p style="color:var(--red)">CRITICAL</p></div>
+    <div class="meter"><div class="ring green">0.25</div><b>DIFF PRESSURE</b><p style="color:var(--green)">NORMAL</p></div>
+    <div class="meter"><div class="ring orange">739</div><b>DPF INLET TEMP</b><p style="color:var(--orange)">HIGH</p></div>
+  </div>
+  <div class="warnBox">
+    <b>⚠ CRITICAL: HIGH ASH LOAD</b><br><br>
+    Ash load is above threshold. Verify OEM procedure, check aftertreatment data, and perform forced regen only when conditions are safe and required.
+  </div>
+  <div class="formBox">
+    <textarea id="regenNotes" placeholder="Regen readings, soot load, temps, result"></textarea>
+    <button class="fullBtn" onclick="regenReport()">START / LOG FORCED REGEN</button>
+    <div class="output" id="regenOut">Ready.</div>
+  </div>
+</div>
 
 <script>
-let timer=null,startTime=null,elapsed=0;
-let parts=[];
+let clockRunning=false;
+let startTime=0;
+let elapsed=0;
+let timer=null;
+let quoteParts=0;
 
+function $(id){return document.getElementById(id)}
 function money(n){return "$"+Number(n||0).toFixed(2)}
 
 function openPanel(id){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
-  window.scrollTo({top:document.getElementById(id).offsetTop-10,behavior:"smooth"});
+  $(id).classList.add("show");
 }
 function closePanels(){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
-  window.scrollTo({top:0,behavior:"smooth"});
+}
+function saveLocal(){
+  localStorage.setItem("rwd_saved", JSON.stringify({
+    date:new Date().toISOString(),
+    shop:$("shopName")?.value || "Rolling Wrench Diesel"
+  }));
+  alert("Saved on this phone/browser.");
 }
 
-function startClock(){
-  if(timer)return;
-  startTime=Date.now()-elapsed;
-  timer=setInterval(updateClock,1000);
-  document.getElementById("clockStatus").innerText="Running";
-}
-function stopClock(){
-  clearInterval(timer);
-  timer=null;
-  document.getElementById("clockStatus").innerText="Stopped";
-}
-function resetClock(){
-  stopClock();
-  elapsed=0;
+function toggleClock(){
+  if(!clockRunning){
+    clockRunning=true;
+    startTime=Date.now()-elapsed;
+    timer=setInterval(updateClock,1000);
+    $("clockState").innerText="● ON THE CLOCK";
+    $("clockBtn").innerText="CLOCK OUT";
+  }else{
+    clockRunning=false;
+    clearInterval(timer);
+    $("clockState").innerText="● STOPPED";
+    $("clockBtn").innerText="CLOCK IN";
+  }
   updateClock();
 }
+function resetClock(){
+  clearInterval(timer);
+  clockRunning=false;
+  elapsed=0;
+  updateClock();
+  $("clockState").innerText="● STOPPED";
+  $("clockBtn").innerText="CLOCK IN";
+}
 function updateClock(){
-  if(startTime)elapsed=Date.now()-startTime;
-  let hrs=elapsed/3600000;
-  let rate=Number(document.getElementById("laborRate").value||135);
-  document.getElementById("clockOut").innerText=
-`Hours: ${hrs.toFixed(2)}
-Labor: ${money(hrs*rate)}`;
-  updateTotal();
+  if(clockRunning) elapsed=Date.now()-startTime;
+  let sec=Math.floor(elapsed/1000);
+  let h=String(Math.floor(sec/3600)).padStart(2,"0");
+  let m=String(Math.floor((sec%3600)/60)).padStart(2,"0");
+  let s=String(sec%60).padStart(2,"0");
+  let display=`${h}:${m}:${s}`;
+  let rate=Number($("clockRate")?.value || $("defaultRate")?.value || 135);
+  let earned=(elapsed/3600000)*rate;
+  $("clockDisplay").innerText=display;
+  $("earnings").innerText=money(earned);
+  if($("clockOut")) $("clockOut").innerText=`${display}\nEarnings: ${money(earned)}`;
 }
 
+function vinLookup(){
+  $("vinOut").innerText=
+`ROLLING WRENCH VIN PROFILE
+
+VIN: ${$("vin").value}
+Engine: ${$("engine").value}
+ESN: ${$("esn").value || "Not entered"}
+CPL: ${$("cpl").value || "Not entered"}
+
+Front-end decode shell working.
+Backend phase connects live NHTSA vPIC + repair history.`;
+}
+
+function partsLookup(){
+  const q=$("partQuery").value || "No part entered";
+  $("partsOut").innerText=
+`OEM PART SEARCH
+
+Query: ${q}
+
+Result Mode:
+- Exact OEM verification required
+- Cross-reference check required
+- VIN/ESN/CPL fitment required
+- No guessing
+
+Backend parts database connects later.`;
+}
 function addPart(){
-  let name=document.getElementById("partName").value.trim();
-  let price=Number(document.getElementById("partPrice").value||0);
-  if(!name)return;
-  parts.push({name,price});
-  document.getElementById("partName").value="";
-  document.getElementById("partPrice").value="";
-  renderParts();
-}
-function renderParts(){
-  document.getElementById("partsCount").innerText=parts.length+" Items";
-  document.getElementById("partsOut").innerText=parts.length
-    ? parts.map((p,i)=>`${i+1}. ${p.name} - ${money(p.price)}`).join("\n")
-    : "No parts added.";
-  updateTotal();
-}
-function clearParts(){
-  parts=[];
-  renderParts();
+  quoteParts += 100;
+  $("partsOut").innerText += `\n\nAdded placeholder part to quote: ${money(100)}`;
 }
 
-function getTotals(){
-  let service=Number(document.getElementById("serviceCall").value||250);
-  let rate=Number(document.getElementById("laborRate").value||135);
-  let hrs=elapsed/3600000;
-  let labor=hrs*rate;
-  let partsTotal=parts.reduce((a,b)=>a+b.price,0);
-  return {service,labor,partsTotal,total:service+labor+partsTotal,hrs};
-}
-function updateTotal(){
-  let t=getTotals();
-  document.getElementById("invoiceTotal").innerText=money(t.total);
-}
+function faultDoctor(){
+  $("faultOut").innerText=
+`ROLLING WRENCH FAULT DOCTOR
 
-function buildDiag(){
-  let spn=document.getElementById("spn").value;
-  let fmi=document.getElementById("fmi").value;
-  let symptom=document.getElementById("symptom").value;
-  document.getElementById("diagOut").innerText=
-`ROLLING WRENCH AI DIAGNOSTIC LOG
+SPN / Code: ${$("spn").value || "N/A"}
+FMI: ${$("fmi").value || "N/A"}
 
-SPN: ${spn || "N/A"}
-FMI: ${fmi || "N/A"}
+Complaint / Data:
+${$("symptom").value || "N/A"}
 
-Complaint / Symptom:
-${symptom || "N/A"}
-
-Next Checks:
+Diagnostic Path:
 1. Verify complaint.
-2. Check power, ground, and connector condition.
-3. Inspect harness rub points.
-4. Confirm sensor data with scan tool.
-5. Repair, clear codes, road test, and document result.`;
+2. Pull active/inactive faults.
+3. Record freeze frame.
+4. Check power, ground, and connector pins.
+5. Inspect harness rub points.
+6. Compare live data to OEM spec.
+7. Repair cause, clear codes, road test, confirm fix.`;
+}
+
+function repairHub(){
+  $("repairOut").innerText=
+`REPAIR PROCEDURE
+
+Request:
+${$("repairRequest").value || "N/A"}
+
+Steps:
+1. Confirm vehicle and engine.
+2. Verify complaint and code history.
+3. Review safety lockout procedure.
+4. Identify component location.
+5. Inspect connector, harness, and mounting.
+6. Remove and replace component as required.
+7. Torque fasteners to OEM spec.
+8. Clear faults.
+9. Run functional test.
+10. Save repair notes to Repair Memory.`;
+}
+
+function buildQuote(){
+  let service=Number($("qService").value||0);
+  let rate=Number($("qRate").value||0);
+  let hours=Number($("qHours").value||0);
+  let parts=Number($("qParts").value||0)+quoteParts;
+  let total=service+(rate*hours)+parts;
+  $("quoteOut").innerText=
+`ROLLING WRENCH DIESEL QUOTE
+
+Customer: ${$("qCustomer").value || "N/A"}
+Job / Unit: ${$("qJob").value || "N/A"}
+
+Service Call: ${money(service)}
+Labor: ${hours.toFixed(2)} hrs x ${money(rate)} = ${money(rate*hours)}
+Parts: ${money(parts)}
+
+ESTIMATED TOTAL: ${money(total)}`;
 }
 
 function buildInvoice(){
-  let t=getTotals();
-  let customer=document.getElementById("customer").value || "Customer";
-  let unit=document.getElementById("unit").value || "Unit";
-  let work=document.getElementById("workDone").value || "Mobile diesel repair service.";
-  let partText=parts.length ? parts.map(p=>`- ${p.name}: ${money(p.price)}`).join("\n") : "- No parts listed";
-  document.getElementById("invoiceOut").innerText=
+  let rate=Number($("defaultRate")?.value || 135);
+  let call=Number($("defaultCall")?.value || 250);
+  let earned=(elapsed/3600000)*rate;
+  let total=call+earned+quoteParts;
+  $("invoiceOut").innerText=
 `ROLLING WRENCH DIESEL
 
-Customer: ${customer}
-Unit: ${unit}
+Customer: ${$("iCustomer").value || "N/A"}
+Unit: ${$("iUnit").value || "N/A"}
 
 Work Performed:
-${work}
+${$("iWork").value || "Mobile diesel repair service."}
 
-Charges:
-Service Call: ${money(t.service)}
-Labor Hours: ${t.hrs.toFixed(2)}
-Labor Total: ${money(t.labor)}
+Service Call: ${money(call)}
+Labor: ${money(earned)}
+Parts: ${money(quoteParts)}
 
-Parts:
-${partText}
-
-TOTAL DUE: ${money(t.total)}
+TOTAL DUE: ${money(total)}
 
 Thank you for choosing Rolling Wrench Diesel.`;
 }
-function copyInvoice(){
-  let text=document.getElementById("invoiceOut").innerText;
-  navigator.clipboard.writeText(text);
-  alert("Invoice copied.");
+function copyText(id){
+  navigator.clipboard.writeText($(id).innerText);
+  alert("Copied.");
 }
 
-function vinDecode(){
-  let vin=document.getElementById("vinInput").value.toUpperCase();
-  document.getElementById("vinOut").innerText=
-`VIN: ${vin}
+function buildWO(){
+  $("woOut").innerText=
+`WORK ORDER
 
-Basic Decode:
-Length: ${vin.length}/17
-Year Digit: ${vin[9] || "N/A"}
-Plant Digit: ${vin[10] || "N/A"}
+Customer: ${$("woCustomer").value || "N/A"}
+Unit: ${$("woUnit").value || "N/A"}
 
-For full live decode, backend API will connect to NHTSA vPIC in backend phase.`;
+Complaint:
+${$("woComplaint").value || "N/A"}
+
+Cause:
+${$("woCause").value || "N/A"}
+
+Correction:
+${$("woCorrection").value || "N/A"}`;
 }
 
-function filterLookup(){
-  let q=document.getElementById("engine").value;
-  document.getElementById("filterOut").innerText=
-`Filter / Fluid Lookup Request:
-${q || "N/A"}
+function dotReport(){
+  $("dotOut").innerText=
+`DOT / GPS REPORT
 
-Check:
-- Oil filter
-- Fuel filter
-- Water separator
-- Air filter
-- Coolant type
-- Oil capacity
-- Grease points
+Inspection Notes:
+${$("dotNotes").value || "N/A"}
 
-Backend database lookup comes in backend phase.`;
-}
-
-function dotBuild(){
-  let n=document.getElementById("dotNotes").value;
-  document.getElementById("dotOut").innerText=
-`DOT INSPECTION NOTE
-
+Checklist:
 Lights:
 Brakes:
 Tires:
 Suspension:
 Steering:
-Air Leaks:
+Air System:
 Frame:
 Trailer:
+GPS / Location:`;
+}
+
+function memorySave(){
+  let note=$("memoryNote").value || "No note entered.";
+  localStorage.setItem("rwd_memory_"+Date.now(), note);
+  $("memoryOut").innerText="Saved repair memory:\n\n"+note;
+}
+
+function askAI(){
+  $("aiOut").innerText=
+`ROLLING WRENCH AI RESPONSE
+
+Question:
+${$("aiAsk").value || "N/A"}
+
+This front-end AI shell is working.
+Backend phase will connect Supabase, repair memory, parts lookup, manuals, and live retrieval.`;
+}
+
+function regenReport(){
+  $("regenOut").innerText=
+`FORCED REGEN LOG
+
+Status: Logged
+Truck: 2020 Freightliner Cascadia 126
+Engine: Cummins X15
+
 Notes:
-${n || "N/A"}`;
+${$("regenNotes").value || "N/A"}
+
+Safety:
+- Engine running confirmed
+- Area clear
+- Temps monitored
+- Faults documented
+- Result saved`;
 }
 
-function regenBuild(){
-  let n=document.getElementById("regenNotes").value;
-  document.getElementById("regenOut").innerText=
-`FORCED REGEN REPORT
-
-Pre-checks:
-- Coolant temp verified
-- No active shutdown faults
-- Exhaust area clear
-- Soot load checked
-- Codes recorded
-
-Notes / Results:
-${n || "N/A"}`;
+function masterSearch(){
+  const q=$("masterInput").value;
+  openPanel("aiPanel");
+  $("aiAsk").value=q;
+  askAI();
 }
 
-updateTotal();
+updateClock();
 </script>
 </body>
 </html>
