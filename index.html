@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rolling Wrench Diesel Console</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body id="app-shell">
+
+  <header class="main-header">
+    <div class="brand-logo">ROLLING WRENCH DIESEL</div>
+    <div class="header-status-dot"></div>
+  </header>
+
+  <main>
+    <div id="home" class="app-section is-active">
+      <div class="welcome-card">
+        <h2>Field Operations Console</h2>
+        <p>Select an operational module to begin tracking. Active states persist across views automatically.</p>
+      </div>
+      <div class="dashboard-grid">
+        <button class="menu-card-btn" data-view="timeClock">
+          <span class="icon">⏱</span>
+          <strong>Time Clock</strong>
+          <span class="status-sub" id="dash-clock-status">Stopped</span>
+        </button>
+        <button class="menu-card-btn" data-view="partsLookup">
+          <span class="icon">📦</span>
+          <strong>Parts Bin</strong>
+          <span class="status-sub" id="dash-parts-count">0 Items Added</span>
+        </button>
+        <button class="menu-card-btn" data-view="diagnostics">
+          <span class="icon">🩺</span>
+          <strong>Diagnostics Log</strong>
+          <span class="status-sub" id="dash-diag-status">Empty</span>
+        </button>
+        <button class="menu-card-btn highlighted-card" data-view="invoice">
+          <span class="icon">🧾</span>
+          <strong>Review Invoice</strong>
+          <span class="status-sub" id="dash-invoice-total">$250.00</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="timeClock" class="app-section">
+      <div class="card header-card central-timer">
+        <h2>Active Job Tracking</h2>
+        <div id="clock-display" class="timer-readout">00:00:00</div>
+        <div class="live-subtitle">Running Labor: <span id="clock-live-cost">$0.00</span></div>
+      </div>
+      <div class="button-grid">
+        <button class="btn btn-success" data-action="start-clock">▶ Start Clock</button>
+        <button class="btn btn-warning" data-action="stop-clock">⏸ Pause Clock</button>
+      </div>
+      <button class="btn btn-danger wide-btn" data-action="clear-job">Clear & Reset Ticket</button>
+      <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
+    </div>
+
+    <div id="partsLookup" class="app-section">
+      <div class="section-header-row">
+        <h3>Parts Added to Ticket</h3>
+        <button class="btn-text-danger" data-action="clear-parts">Clear All</button>
+      </div>
+      <div id="parts-list-container" class="parts-scroll-zone"></div>
+      <div class="actions-footer-box">
+        <button class="btn btn-primary wide-btn" data-view="invoice">View Invoice Summary</button>
+        <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
+      </div>
+    </div>
+
+    <div id="diagnostics" class="app-section">
+      <div class="section-header-row">
+        <h3>Diagnostic & Tech Notes</h3>
+      </div>
+      <div class="card form-card">
+        <label class="form-label" for="job-notes-display">Active Ticket Notes Log</label>
+        <textarea id="job-notes-display" class="app-textarea" rows="6" placeholder="Diagnostic payloads populate here. Type custom log entries securely..."></textarea>
+        <button class="btn btn-secondary btn-sm" data-action="save-manual-notes">Save Notes to State</button>
+      </div>
+      <div id="diag-summary-container" class="diagnostics-summary-zone"></div>
+      <div class="actions-footer-box">
+        <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
+      </div>
+    </div>
+
+    <div id="invoice" class="app-section">
+      <h3>Job Summary & Invoice</h3>
+      <div class="invoice-table">
+        <div class="inv-row"><span>Service Call Dispatch:</span><strong id="inv-service-call">$250.00</strong></div>
+        <div class="inv-row"><span>Logged Labor Hours:</span><strong id="inv-labor-hours">0.00</strong></div>
+        <div class="inv-row"><span>Labor Cost:</span><strong id="inv-labor-total">$0.00</strong></div>
+        <div class="inv-row"><span>Parts Total:</span><strong id="inv-parts-total">$0.00</strong></div>
+        <hr class="inv-divider">
+        <div class="inv-row total-row"><span>Grand Total:</span><span id="inv-grand-total">$250.00</span></div>
+      </div>
+      <button class="btn btn-secondary wide-btn" data-action="back">← Back</button>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/parts.js"></script>
+</body>
+</html>
