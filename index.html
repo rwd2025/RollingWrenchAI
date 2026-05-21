@@ -1,105 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Rolling Wrench Diesel Console</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Rolling Wrench AI</title>
+<style>
+:root{
+  --bg:#050505;
+  --card:#151515;
+  --card2:#1c1c1c;
+  --line:#2e2e2e;
+  --orange:#ff6a00;
+  --text:#f5f5f5;
+  --muted:#aaa;
+  --green:#28d17c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top right,#291000 0,#050505 35%),
+    linear-gradient(135deg,#050505,#111);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#121212;
+  border-bottom:1px solid var(--line);
+  padding:18px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.brand{
+  color:var(--orange);
+  font-weight:900;
+  letter-spacing:2px;
+  font-size:18px;
+}
+.dot{
+  width:11px;
+  height:11px;
+  background:var(--green);
+  border-radius:50%;
+}
+main{
+  padding:18px;
+  max-width:900px;
+  margin:auto;
+}
+.hero{
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#181818,#101010);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+}
+.hero h1{
+  margin:0 0 8px;
+  font-size:28px;
+}
+.hero p{
+  color:var(--muted);
+  margin:0;
+  line-height:1.4;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.card{
+  min-height:125px;
+  background:linear-gradient(145deg,#181818,#111);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  cursor:pointer;
+}
+.card:hover,.active{
+  border-color:var(--orange);
+  box-shadow:0 0 0 1px var(--orange);
+}
+.icon{
+  font-size:26px;
+  margin-bottom:12px;
+}
+.card strong{
+  display:block;
+  font-size:16px;
+}
+.card span{
+  color:var(--muted);
+  display:block;
+  margin-top:8px;
+}
+.panel{
+  display:none;
+  margin-top:18px;
+  border:1px solid var(--line);
+  background:#121212;
+  border-radius:18px;
+  padding:18px;
+}
+.panel.show{display:block}
+button{
+  border:none;
+  background:var(--orange);
+  color:#111;
+  font-weight:900;
+  padding:13px 15px;
+  border-radius:12px;
+  margin:6px 4px 6px 0;
+  cursor:pointer;
+}
+button.secondary{
+  background:#252525;
+  color:var(--text);
+  border:1px solid var(--line);
+}
+input,textarea,select{
+  width:100%;
+  background:#090909;
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:13px;
+  margin:8px 0;
+  font-size:16px;
+}
+textarea{min-height:95px}
+.output{
+  background:#080808;
+  border:1px dashed #333;
+  border-radius:14px;
+  padding:14px;
+  margin-top:12px;
+  white-space:pre-wrap;
+  color:#ddd;
+}
+.back{
+  margin-bottom:10px;
+}
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
 </head>
-<body id="app-shell">
 
-  <header class="main-header">
-    <div class="brand-logo">ROLLING WRENCH DIESEL</div>
-    <div class="header-status-dot"></div>
-  </header>
+<body>
+<header>
+  <div class="brand">ROLLING WRENCH DIESEL</div>
+  <div class="dot"></div>
+</header>
 
-  <main>
-    <div id="home" class="app-section is-active">
-      <div class="welcome-card">
-        <h2>Field Operations Console</h2>
-        <p>Select an operational module to begin tracking. Active states persist across views automatically.</p>
-      </div>
-      <div class="dashboard-grid">
-        <button class="menu-card-btn" data-view="timeClock">
-          <span class="icon">⏱</span>
-          <strong>Time Clock</strong>
-          <span class="status-sub" id="dash-clock-status">Stopped</span>
-        </button>
-        <button class="menu-card-btn" data-view="partsLookup">
-          <span class="icon">📦</span>
-          <strong>Parts Bin</strong>
-          <span class="status-sub" id="dash-parts-count">0 Items Added</span>
-        </button>
-        <button class="menu-card-btn" data-view="diagnostics">
-          <span class="icon">🩺</span>
-          <strong>Diagnostics Log</strong>
-          <span class="status-sub" id="dash-diag-status">Empty</span>
-        </button>
-        <button class="menu-card-btn highlighted-card" data-view="invoice">
-          <span class="icon">🧾</span>
-          <strong>Review Invoice</strong>
-          <span class="status-sub" id="dash-invoice-total">$250.00</span>
-        </button>
-      </div>
-    </div>
+<main>
+  <section class="hero">
+    <h1>Field Operations Console</h1>
+    <p>Mobile diesel repair command center. Time clock, parts, diagnostics, invoices, VIN, filters, DOT, regen notes, and job tracking.</p>
+  </section>
 
-    <div id="timeClock" class="app-section">
-      <div class="card header-card central-timer">
-        <h2>Active Job Tracking</h2>
-        <div id="clock-display" class="timer-readout">00:00:00</div>
-        <div class="live-subtitle">Running Labor: <span id="clock-live-cost">$0.00</span></div>
-      </div>
-      <div class="button-grid">
-        <button class="btn btn-success" data-action="start-clock">▶ Start Clock</button>
-        <button class="btn btn-warning" data-action="stop-clock">⏸ Pause Clock</button>
-      </div>
-      <button class="btn btn-danger wide-btn" data-action="clear-job">Clear & Reset Ticket</button>
-      <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
-    </div>
+  <section class="grid">
+    <div class="card" onclick="openPanel('clock')"><div class="icon">⏱️</div><strong>Time Clock</strong><span id="clockStatus">Stopped</span></div>
+    <div class="card" onclick="openPanel('parts')"><div class="icon">📦</div><strong>Parts Bin</strong><span id="partsCount">0 Items</span></div>
+    <div class="card" onclick="openPanel('diag')"><div class="icon">🩺</div><strong>Diagnostics</strong><span>SPN / FMI / Symptoms</span></div>
+    <div class="card" onclick="openPanel('invoice')"><div class="icon">🧾</div><strong>Invoice</strong><span id="invoiceTotal">$250.00</span></div>
+    <div class="card" onclick="openPanel('vin')"><div class="icon">🚛</div><strong>VIN Decode</strong><span>Truck Info</span></div>
+    <div class="card" onclick="openPanel('filters')"><div class="icon">🛢️</div><strong>Filters & Fluids</strong><span>PM Lookup</span></div>
+    <div class="card" onclick="openPanel('dot')"><div class="icon">📋</div><strong>DOT Inspection</strong><span>Checklist</span></div>
+    <div class="card" onclick="openPanel('regen')"><div class="icon">🔥</div><strong>Forced Regen</strong><span>Procedure Log</span></div>
+  </section>
 
-    <div id="partsLookup" class="app-section">
-      <div class="section-header-row">
-        <h3>Parts Added to Ticket</h3>
-        <button class="btn-text-danger" data-action="clear-parts">Clear All</button>
-      </div>
-      <div id="parts-list-container" class="parts-scroll-zone"></div>
-      <div class="actions-footer-box">
-        <button class="btn btn-primary wide-btn" data-view="invoice">View Invoice Summary</button>
-        <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
-      </div>
-    </div>
+  <section id="clock" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Time Clock</h2>
+    <input id="laborRate" type="number" value="135" placeholder="Hourly Rate" />
+    <input id="serviceCall" type="number" value="250" placeholder="Service Call" />
+    <button onclick="startClock()">Start</button>
+    <button onclick="stopClock()">Stop</button>
+    <button class="secondary" onclick="resetClock()">Reset</button>
+    <div class="output" id="clockOut">Hours: 0.00
+Labor: $0.00</div>
+  </section>
 
-    <div id="diagnostics" class="app-section">
-      <div class="section-header-row">
-        <h3>Diagnostic & Tech Notes</h3>
-      </div>
-      <div class="card form-card">
-        <label class="form-label" for="job-notes-display">Active Ticket Notes Log</label>
-        <textarea id="job-notes-display" class="app-textarea" rows="6" placeholder="Diagnostic payloads populate here. Type custom log entries securely..."></textarea>
-        <button class="btn btn-secondary btn-sm" data-action="save-manual-notes">Save Notes to State</button>
-      </div>
-      <div id="diag-summary-container" class="diagnostics-summary-zone"></div>
-      <div class="actions-footer-box">
-        <button class="btn btn-secondary wide-btn" data-action="back">← Back to Console</button>
-      </div>
-    </div>
+  <section id="parts" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Parts Bin</h2>
+    <input id="partName" placeholder="Part name / number" />
+    <input id="partPrice" type="number" placeholder="Price" />
+    <button onclick="addPart()">Add Part</button>
+    <button class="secondary" onclick="clearParts()">Clear Parts</button>
+    <div class="output" id="partsOut">No parts added.</div>
+  </section>
 
-    <div id="invoice" class="app-section">
-      <h3>Job Summary & Invoice</h3>
-      <div class="invoice-table">
-        <div class="inv-row"><span>Service Call Dispatch:</span><strong id="inv-service-call">$250.00</strong></div>
-        <div class="inv-row"><span>Logged Labor Hours:</span><strong id="inv-labor-hours">0.00</strong></div>
-        <div class="inv-row"><span>Labor Cost:</span><strong id="inv-labor-total">$0.00</strong></div>
-        <div class="inv-row"><span>Parts Total:</span><strong id="inv-parts-total">$0.00</strong></div>
-        <hr class="inv-divider">
-        <div class="inv-row total-row"><span>Grand Total:</span><span id="inv-grand-total">$250.00</span></div>
-      </div>
-      <button class="btn btn-secondary wide-btn" data-action="back">← Back</button>
-    </div>
-  </main>
+  <section id="diag" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Diagnostics Log</h2>
+    <input id="spn" placeholder="SPN" />
+    <input id="fmi" placeholder="FMI" />
+    <textarea id="symptom" placeholder="Customer complaint / symptom"></textarea>
+    <button onclick="buildDiag()">Build Diagnostic Note</button>
+    <div class="output" id="diagOut">Enter fault or symptom.</div>
+  </section>
 
-  <script src="js/app.js"></script>
-  <script src="js/clock.js"></script>
-  <script src="js/parts.js"></script>
+  <section id="invoice" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Invoice Builder</h2>
+    <input id="customer" placeholder="Customer Name" />
+    <input id="unit" placeholder="Truck / Unit / VIN" />
+    <textarea id="workDone" placeholder="Work performed"></textarea>
+    <button onclick="buildInvoice()">Build Invoice</button>
+    <button class="secondary" onclick="copyInvoice()">Copy Invoice</button>
+    <div class="output" id="invoiceOut">Invoice ready.</div>
+  </section>
+
+  <section id="vin" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>VIN Decode</h2>
+    <input id="vinInput" placeholder="Enter VIN" maxlength="17" />
+    <button onclick="vinDecode()">Decode Basic VIN</button>
+    <div class="output" id="vinOut">Enter VIN.</div>
+  </section>
+
+  <section id="filters" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Filters & Fluids</h2>
+    <input id="engine" placeholder="Engine / Unit / Filter #" />
+    <button onclick="filterLookup()">Lookup</button>
+    <div class="output" id="filterOut">Enter engine or filter number.</div>
+  </section>
+
+  <section id="dot" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>DOT Inspection</h2>
+    <textarea id="dotNotes" placeholder="Inspection notes"></textarea>
+    <button onclick="dotBuild()">Build DOT Note</button>
+    <div class="output" id="dotOut">Checklist ready.</div>
+  </section>
+
+  <section id="regen" class="panel">
+    <button class="secondary back" onclick="closePanels()">← Back</button>
+    <h2>Forced Regen Log</h2>
+    <textarea id="regenNotes" placeholder="Temps, soot load, codes, result"></textarea>
+    <button onclick="regenBuild()">Build Regen Report</button>
+    <div class="output" id="regenOut">Forced regen notes.</div>
+  </section>
+</main>
+
+<script>
+let timer=null,startTime=null,elapsed=0;
+let parts=[];
+
+function money(n){return "$"+Number(n||0).toFixed(2)}
+
+function openPanel(id){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
+  document.getElementById(id).classList.add("show");
+  window.scrollTo({top:document.getElementById(id).offsetTop-10,behavior:"smooth"});
+}
+function closePanels(){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function startClock(){
+  if(timer)return;
+  startTime=Date.now()-elapsed;
+  timer=setInterval(updateClock,1000);
+  document.getElementById("clockStatus").innerText="Running";
+}
+function stopClock(){
+  clearInterval(timer);
+  timer=null;
+  document.getElementById("clockStatus").innerText="Stopped";
+}
+function resetClock(){
+  stopClock();
+  elapsed=0;
+  updateClock();
+}
+function updateClock(){
+  if(startTime)elapsed=Date.now()-startTime;
+  let hrs=elapsed/3600000;
+  let rate=Number(document.getElementById("laborRate").value||135);
+  document.getElementById("clockOut").innerText=
+`Hours: ${hrs.toFixed(2)}
+Labor: ${money(hrs*rate)}`;
+  updateTotal();
+}
+
+function addPart(){
+  let name=document.getElementById("partName").value.trim();
+  let price=Number(document.getElementById("partPrice").value||0);
+  if(!name)return;
+  parts.push({name,price});
+  document.getElementById("partName").value="";
+  document.getElementById("partPrice").value="";
+  renderParts();
+}
+function renderParts(){
+  document.getElementById("partsCount").innerText=parts.length+" Items";
+  document.getElementById("partsOut").innerText=parts.length
+    ? parts.map((p,i)=>`${i+1}. ${p.name} - ${money(p.price)}`).join("\n")
+    : "No parts added.";
+  updateTotal();
+}
+function clearParts(){
+  parts=[];
+  renderParts();
+}
+
+function getTotals(){
+  let service=Number(document.getElementById("serviceCall").value||250);
+  let rate=Number(document.getElementById("laborRate").value||135);
+  let hrs=elapsed/3600000;
+  let labor=hrs*rate;
+  let partsTotal=parts.reduce((a,b)=>a+b.price,0);
+  return {service,labor,partsTotal,total:service+labor+partsTotal,hrs};
+}
+function updateTotal(){
+  let t=getTotals();
+  document.getElementById("invoiceTotal").innerText=money(t.total);
+}
+
+function buildDiag(){
+  let spn=document.getElementById("spn").value;
+  let fmi=document.getElementById("fmi").value;
+  let symptom=document.getElementById("symptom").value;
+  document.getElementById("diagOut").innerText=
+`ROLLING WRENCH AI DIAGNOSTIC LOG
+
+SPN: ${spn || "N/A"}
+FMI: ${fmi || "N/A"}
+
+Complaint / Symptom:
+${symptom || "N/A"}
+
+Next Checks:
+1. Verify complaint.
+2. Check power, ground, and connector condition.
+3. Inspect harness rub points.
+4. Confirm sensor data with scan tool.
+5. Repair, clear codes, road test, and document result.`;
+}
+
+function buildInvoice(){
+  let t=getTotals();
+  let customer=document.getElementById("customer").value || "Customer";
+  let unit=document.getElementById("unit").value || "Unit";
+  let work=document.getElementById("workDone").value || "Mobile diesel repair service.";
+  let partText=parts.length ? parts.map(p=>`- ${p.name}: ${money(p.price)}`).join("\n") : "- No parts listed";
+  document.getElementById("invoiceOut").innerText=
+`ROLLING WRENCH DIESEL
+
+Customer: ${customer}
+Unit: ${unit}
+
+Work Performed:
+${work}
+
+Charges:
+Service Call: ${money(t.service)}
+Labor Hours: ${t.hrs.toFixed(2)}
+Labor Total: ${money(t.labor)}
+
+Parts:
+${partText}
+
+TOTAL DUE: ${money(t.total)}
+
+Thank you for choosing Rolling Wrench Diesel.`;
+}
+function copyInvoice(){
+  let text=document.getElementById("invoiceOut").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Invoice copied.");
+}
+
+function vinDecode(){
+  let vin=document.getElementById("vinInput").value.toUpperCase();
+  document.getElementById("vinOut").innerText=
+`VIN: ${vin}
+
+Basic Decode:
+Length: ${vin.length}/17
+Year Digit: ${vin[9] || "N/A"}
+Plant Digit: ${vin[10] || "N/A"}
+
+For full live decode, backend API will connect to NHTSA vPIC in backend phase.`;
+}
+
+function filterLookup(){
+  let q=document.getElementById("engine").value;
+  document.getElementById("filterOut").innerText=
+`Filter / Fluid Lookup Request:
+${q || "N/A"}
+
+Check:
+- Oil filter
+- Fuel filter
+- Water separator
+- Air filter
+- Coolant type
+- Oil capacity
+- Grease points
+
+Backend database lookup comes in backend phase.`;
+}
+
+function dotBuild(){
+  let n=document.getElementById("dotNotes").value;
+  document.getElementById("dotOut").innerText=
+`DOT INSPECTION NOTE
+
+Lights:
+Brakes:
+Tires:
+Suspension:
+Steering:
+Air Leaks:
+Frame:
+Trailer:
+Notes:
+${n || "N/A"}`;
+}
+
+function regenBuild(){
+  let n=document.getElementById("regenNotes").value;
+  document.getElementById("regenOut").innerText=
+`FORCED REGEN REPORT
+
+Pre-checks:
+- Coolant temp verified
+- No active shutdown faults
+- Exhaust area clear
+- Soot load checked
+- Codes recorded
+
+Notes / Results:
+${n || "N/A"}`;
+}
+
+updateTotal();
+</script>
 </body>
 </html>
