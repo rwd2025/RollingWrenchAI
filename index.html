@@ -2,133 +2,495 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Rolling Wrench AI</title>
+
 <style>
 :root{
-  --bg:#03060a;--panel:#07101a;--panel2:#0b1420;--card:#0b111a;--card2:#111923;
-  --line:#1f3448;--line2:#26394d;--orange:#ff6a00;--orange2:#ff8c1a;
-  --green:#27e66d;--red:#ff3b3b;--blue:#188cff;--yellow:#ffb020;
-  --text:#f4f7fb;--muted:#8e9aaa;--muted2:#5e6b7d;
-  --shadow:0 12px 35px rgba(0,0,0,.45);
+  --bg-main:#070a12;
+  --bg-deep:#020408;
+  --bg-card:linear-gradient(145deg,#111625,#070a12);
+  --orange:#ff5a00;
+  --orange2:#ff8a1f;
+  --orange-glow:rgba(255,90,0,.35);
+  --green:#27e66d;
+  --red:#ff3b3b;
+  --yellow:#ffb020;
+  --line:#24384f;
+  --line-soft:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#94a3b8;
 }
-*{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{
-  min-height:100vh;
-  background:radial-gradient(circle at top left,rgba(255,106,0,.12),transparent 35%),
-  radial-gradient(circle at top right,rgba(0,145,255,.10),transparent 35%),
-  linear-gradient(180deg,#03060a,#000);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,90,0,.18),transparent 24%),
+    radial-gradient(circle at 100% 10%,rgba(0,145,255,.10),transparent 28%),
+    linear-gradient(180deg,#080d16,#020408 45%,#000);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  padding-bottom:92px;
+  overflow-x:hidden;
 }
-.app{max-width:980px;margin:auto;padding-bottom:92px}
-.topbar{position:sticky;top:0;z-index:20;background:rgba(3,6,10,.96);backdrop-filter:blur(14px);border-bottom:1px solid #111b28;padding:18px 14px 14px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.leftHead,.rightHead{display:flex;align-items:center;gap:10px}
-.logoBox{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,#ff7a00,#9b3100);display:grid;place-items:center;box-shadow:0 0 24px rgba(255,106,0,.45);font-size:28px}
-.brand h1{margin:0;font-size:24px;letter-spacing:1px;line-height:1}.brand h1 span{color:var(--orange)}
-.brand p{margin:4px 0 0;color:#b7c0cb;font-size:10px;font-weight:800;letter-spacing:2px}
-.iconBtn{width:46px;height:46px;border:1px solid var(--line);background:linear-gradient(145deg,#101a27,#060a10);color:white;border-radius:13px;display:grid;place-items:center;font-size:24px;position:relative}
-.badge{position:absolute;right:-5px;top:-6px;background:var(--orange);color:#fff;font-size:12px;font-weight:900;border-radius:999px;padding:4px 8px}
-.activeBar{margin-top:14px;border:1px solid var(--line);background:linear-gradient(145deg,#08111c,#05080d);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap;font-size:13px;font-weight:800}
-.dot{width:11px;height:11px;background:var(--green);border-radius:50%;box-shadow:0 0 14px var(--green)}
-.activeBar .sep{height:18px;width:1px;background:#34465b}.activeBar span{color:#cbd5df}.activeBar b{color:#fff}.connected{margin-left:auto;color:var(--green)!important;font-size:12px}
-.main{padding:14px}.statusGrid{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:12px;margin-bottom:14px}
-.glass{border:1px solid var(--line);background:linear-gradient(145deg,rgba(16,27,40,.95),rgba(4,8,13,.95));border-radius:16px;box-shadow:var(--shadow)}
-.statusCard{padding:14px;min-height:162px;position:relative;overflow:hidden}.statusCard h3{margin:0 0 10px;font-size:15px;letter-spacing:2px;text-transform:uppercase}
-.smallGreen{color:var(--green);font-size:12px;font-weight:900}
-.clockBig{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:30px;font-weight:900;background:#07090d;border:1px solid #171f29;border-radius:14px;padding:14px 10px;margin:10px 0}
-.money{font-size:32px;color:var(--green);font-weight:950;margin-top:3px}
-.orangeBtn{width:100%;padding:12px;border-radius:12px;border:1px solid var(--orange);background:rgba(255,106,0,.08);color:var(--orange);font-weight:950;letter-spacing:.8px;font-size:14px}
-.truckCard{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}.truckPic{height:94px;border-radius:14px;background:linear-gradient(145deg,#111923,#03060a);border:1px solid #24364a;display:grid;place-items:center;font-size:62px}
-.truckInfo h2{margin:0 0 6px;font-size:22px;line-height:1.05}.truckInfo p{margin:3px 0;color:#b8c2cc;font-size:12px}
-.gaugeWrap{display:grid;place-items:center}.gauge{width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--green) 0 82%,#29313c 82% 100%);display:grid;place-items:center;margin:auto}
-.gaugeInner{width:86px;height:86px;border-radius:50%;background:#08101a;display:grid;place-items:center;font-size:34px;font-weight:950;box-shadow:inset 0 0 18px rgba(0,0,0,.65)}
-.askBox{margin:14px 0;border:3px solid var(--orange);border-radius:18px;background:linear-gradient(145deg,#09121d,#03070d);padding:12px;display:flex;align-items:center;gap:12px}
-.rwCircle{width:54px;height:54px;border-radius:50%;border:5px solid var(--orange);display:grid;place-items:center;font-weight:950;font-size:19px}
-.askText{flex:1}.askText h2{margin:0;font-size:24px}.askText p{margin:4px 0 0;color:#9eabb8;font-size:14px}.askIcon{font-size:28px;border-left:1px solid #34465b;padding-left:14px}
-.masterSearch{margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#0b1420,#05080d);display:flex;align-items:center;gap:12px}
-.masterSearch .mag{font-size:30px}.masterSearch input{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:17px}.masterSearch .scan{font-size:27px;color:#d9e2ee}
-.moduleGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.module{border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#0c1520,#03070c);min-height:130px;padding:11px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
-.module:active{border-color:var(--orange);transform:scale(.98)}.module .emoji{font-size:38px;margin-bottom:9px}.module strong{font-size:13px;line-height:1.2}.module span{font-size:11px;color:#a4afbb;margin-top:7px;line-height:1.2}
-.dataGrid{margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.dataCard{padding:13px;min-height:158px}
-.dataHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.dataHead h3{margin:0;font-size:13px;letter-spacing:.4px}.dataHead a{color:var(--orange);font-size:11px;font-weight:900}
-.faultRow,.woRow{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #162333;padding:8px 0}.faultRow b,.woRow b{font-size:13px}.faultRow small,.woRow small{display:block;color:#8f9aaa;margin-top:2px;font-size:11px}
-.count{background:rgba(255,106,0,.25);color:var(--orange);border:1px solid rgba(255,106,0,.35);border-radius:7px;padding:5px 9px;font-weight:950}
-.complete{color:var(--green);font-size:10px;font-weight:950}.progress{color:var(--orange);font-size:10px;font-weight:950}.bars{height:70px;display:flex;align-items:end;gap:7px;margin:12px 0}.bar{flex:1;background:var(--orange);border-radius:4px 4px 0 0}.bar.gray{background:#3b4655}
-.statusStrip{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stripItem{border:1px solid var(--line);background:linear-gradient(145deg,#0b1420,#03060a);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;font-weight:900;font-size:12px}.stripItem span{display:block;color:var(--green);font-size:11px;margin-top:3px}.stripItem .ok{margin-left:auto;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-.bottomNav{position:fixed;left:0;right:0;bottom:0;z-index:25;background:rgba(3,6,10,.97);border-top:1px solid #172232;backdrop-filter:blur(14px)}
-.navInner{max-width:980px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
-.navItem{text-align:center;color:#7e8997;font-size:11px;font-weight:900;letter-spacing:1.5px;padding:10px 4px;border-radius:10px}.navItem .navIcon{font-size:28px;display:block;margin-bottom:4px}.navItem.active{color:var(--orange);border:1px solid var(--orange);background:rgba(255,106,0,.08)}
-.panel{display:none;position:fixed;inset:0;z-index:50;background:#020408;overflow:auto;padding:16px 16px 100px}.panel.show{display:block}
-.panelTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.backBtn,.saveBtn{border:1px solid var(--line);background:#0b1420;color:#fff;border-radius:12px;padding:12px 14px;font-weight:900}.saveBtn{border-color:var(--orange);color:var(--orange)}
-.panel h1{margin:10px 0 4px;font-size:28px}.panel p{color:var(--muted)}
-.formBox{border:1px solid var(--line);background:linear-gradient(145deg,#0b1420,#04070c);border-radius:16px;padding:14px;margin-top:12px}
-.formBox label{display:block;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin:10px 0 2px 4px}
-input,textarea,select{width:100%;margin:7px 0 10px;padding:13px;border-radius:12px;border:1px solid #26384b;background:#05090f;color:white;font-size:16px}
-textarea{min-height:110px}.actionRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.fullBtn{border:1px solid var(--orange);background:var(--orange);color:#111;font-weight:950;border-radius:12px;padding:14px;font-size:15px}
-.darkBtn{border:1px solid #304357;background:#101925;color:#fff;font-weight:900;border-radius:12px;padding:14px;font-size:15px}
-.output{margin-top:12px;background:#03070c;border:1px dashed #34465b;border-radius:14px;padding:13px;color:#dce5ef;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.45}
-.regenDash{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}.meter{text-align:center;border:1px solid var(--line);border-radius:14px;background:#101720;padding:14px}
-.ring{width:86px;height:86px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:23px;font-weight:950;background:conic-gradient(var(--red) 0 86%,#303844 86% 100%)}.ring.green{background:conic-gradient(var(--green) 0 78%,#303844 78% 100%)}.ring.orange{background:conic-gradient(var(--orange) 0 72%,#303844 72% 100%)}.meter b{font-size:12px;color:#cfd8e3}
+.app{max-width:980px;margin:auto}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  background:linear-gradient(180deg,#0c1220,#060911);
+  border-bottom:1px solid var(--line-soft);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.nav-icon{
+  width:48px;height:48px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:linear-gradient(145deg,#121b2b,#050810);
+  color:#fff;
+  font-size:24px;
+  font-weight:900;
+}
+.brand{text-align:center;flex:1}
+.brand h1{
+  font-size:23px;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.brand h1 span{color:var(--orange);text-shadow:0 0 12px var(--orange-glow)}
+.brand p{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-top:3px;
+}
+.header-actions{display:flex;gap:10px;position:relative}
+.badge-count{
+  position:absolute;
+  top:-8px;
+  left:26px;
+  background:var(--orange);
+  color:#fff;
+  font-size:12px;
+  font-weight:950;
+  padding:4px 8px;
+  border-radius:999px;
+  box-shadow:0 0 10px var(--orange);
+}
+
+.status-marquee{
+  margin:12px 16px 0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  overflow:hidden;
+  white-space:nowrap;
+  background:#0b101b;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:11px 12px;
+  font-size:12px;
+  font-weight:900;
+}
+.indicator-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+.marquee-muted{color:#d8dee8}
+.connected{color:var(--green);margin-left:auto}
+
+.dashboard-container{padding:16px;display:flex;flex-direction:column;gap:16px}
+.top-row-panels{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:10px}
+.diagnostic-card{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-top:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 14px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.card-title{
+  font-size:11px;
+  color:#fff;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:9px;
+}
+.status-pill{
+  display:inline-flex;
+  color:var(--green);
+  font-size:10px;
+  font-weight:950;
+  margin-bottom:8px;
+}
+.digital-timer{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:20px;
+  font-weight:950;
+  background:#05070d;
+  border:1px solid #192536;
+  border-radius:13px;
+  padding:11px 8px;
+  margin-bottom:8px;
+}
+.earnings-box p{font-size:10px;color:var(--muted)}
+.earnings-amount{
+  color:var(--green);
+  font-size:22px;
+  font-weight:950;
+  text-shadow:0 0 14px rgba(39,230,109,.38);
+  margin:4px 0 10px;
+}
+.btn-action-outline,.fullBtn{
+  width:100%;
+  border:1px solid var(--orange);
+  border-radius:11px;
+  background:linear-gradient(180deg,#ff8a1f,#ff5a00);
+  color:#111;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:12px 8px;
+  box-shadow:0 0 18px var(--orange-glow),inset 0 1px 0 rgba(255,255,255,.35);
+}
+.darkBtn,.backBtn,.saveBtn{
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:linear-gradient(145deg,#121b2b,#050810);
+  color:#fff;
+  font-weight:950;
+  padding:12px;
+}
+.saveBtn{border-color:var(--orange);color:var(--orange)}
+.truck-identity{text-align:center;font-size:15px;font-weight:950;line-height:1.15;margin-bottom:8px}
+.truck-render-container{display:flex;align-items:center;justify-content:center;height:58px;margin-bottom:8px}
+.truck-render-placeholder{font-size:48px;filter:drop-shadow(0 0 12px rgba(255,90,0,.18))}
+.specs-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  font-size:9px;
+  border-top:1px solid var(--line-soft);
+  padding-top:7px;
+  margin-bottom:8px;
+}
+.spec-item span{display:block;color:var(--muted);font-size:8px;text-transform:uppercase}
+
+.radial-progress-container{position:relative;width:72px;height:72px;margin:0 auto 8px}
+.radial-svg{transform:rotate(-90deg);width:100%;height:100%}
+.radial-bg{fill:none;stroke:#1a2434;stroke-width:7}
+.radial-fill{fill:none;stroke:var(--green);stroke-width:7;stroke-dasharray:188.4;stroke-dashoffset:3.76;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(39,230,109,.55))}
+.radial-text{position:absolute;inset:0;display:grid;place-items:center;font-size:19px;font-weight:950}
+.status-summary-text{text-align:center;color:var(--green);font-size:10px;font-weight:950;margin-bottom:8px}
+
+.ask-ai-banner{
+  background:
+    radial-gradient(circle at 88% 50%,rgba(255,90,0,.22),transparent 25%),
+    linear-gradient(180deg,#101726,#080b14);
+  border:2px solid var(--orange);
+  border-radius:18px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 0 22px var(--orange-glow),inset 0 0 24px rgba(255,90,0,.06);
+}
+.ai-identity{display:flex;align-items:center;gap:12px}
+.ai-avatar{
+  width:52px;height:52px;border-radius:50%;
+  border:4px solid var(--orange);
+  display:grid;place-items:center;
+  font-size:22px;font-weight:950;
+  box-shadow:0 0 16px var(--orange-glow);
+}
+.ai-meta h2{font-size:22px;font-weight:950}
+.ai-meta p{font-size:13px;color:var(--muted);line-height:1.35;margin-top:3px}
+.voice-mic-container{font-size:32px}
+
+.master-search-container{
+  background:#0c111d;
+  border:1px solid var(--line);
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.6);
+}
+.search-icon-left,.barcode-icon-right{font-size:24px;color:#d9e2ee}
+.master-search-container input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:#fff;
+  font-size:15px;
+}
+.master-search-container input::placeholder{color:#657184}
+
+.apps-matrix-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.matrix-item{
+  min-height:118px;
+  background:var(--bg-card);
+  border:1px solid rgba(255,90,0,.42);
+  border-top:1px solid rgba(255,255,255,.14);
+  border-radius:13px;
+  box-shadow:0 10px 24px rgba(0,0,0,.48),inset 0 0 18px rgba(255,90,0,.035);
+  padding:10px 5px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.matrix-item:active{transform:scale(.98);box-shadow:0 0 18px var(--orange-glow)}
+.matrix-icon-wrapper{font-size:34px;margin-bottom:8px;filter:drop-shadow(0 0 8px rgba(255,90,0,.25))}
+.matrix-item h3{font-size:11px;font-weight:950;text-transform:uppercase;margin-bottom:5px}
+.matrix-item p{font-size:10px;color:var(--muted);line-height:1.2}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.info-card{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.info-card h3{font-size:12px;margin-bottom:8px}
+.info-card p{font-size:11px;color:var(--muted);margin:5px 0}
+.green{color:var(--green)!important}.orange{color:var(--orange)!important}
+
+.bottom-nav-bar{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:74px;
+  background:linear-gradient(180deg,#101827,#050810);
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  z-index:40;
+  box-shadow:0 -12px 35px rgba(0,0,0,.75);
+}
+.nav-tab{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  gap:5px;
+  font-weight:950;
+}
+.nav-tab.active{
+  color:var(--orange);
+  border-top:2px solid var(--orange);
+  background:rgba(255,90,0,.08);
+}
+.nav-tab-icon{font-size:25px}
+.nav-tab label{font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+
+.panel{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:80;
+  background:#020408;
+  overflow:auto;
+  padding:18px 16px 100px;
+}
+.panel.show{display:block}
+.panelTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.panel h1{font-size:34px;margin-bottom:8px}
+.panel p{color:var(--muted);font-size:15px;line-height:1.35}
+.formBox{
+  margin-top:16px;
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 14px 30px rgba(0,0,0,.55);
+}
+.formBox label{
+  display:block;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.12em;
+  color:var(--orange);
+  text-transform:uppercase;
+  margin:12px 0 4px;
+}
+input,textarea,select{
+  width:100%;
+  background:#050810;
+  border:1px solid #304862;
+  color:#fff;
+  border-radius:13px;
+  padding:14px;
+  margin:7px 0;
+  font-size:16px;
+}
+textarea{min-height:110px}
+.actionRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.output{
+  margin-top:14px;
+  background:#03060b;
+  border:1px dashed #3b536d;
+  border-radius:14px;
+  padding:14px;
+  white-space:pre-wrap;
+  color:#dce5ef;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:13px;
+  line-height:1.45;
+}
+.regenDash{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.meter{text-align:center;border:1px solid var(--line);border-radius:14px;background:#101720;padding:14px}
+.ring{width:86px;height:86px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:23px;font-weight:950;background:conic-gradient(var(--red) 0 86%,#303844 86% 100%)}
+.ring.green{background:conic-gradient(var(--green) 0 78%,#303844 78% 100%)}
+.ring.orange{background:conic-gradient(var(--orange) 0 72%,#303844 72% 100%)}
 .warnBox{border:1px solid rgba(255,59,59,.6);background:rgba(255,59,59,.08);color:#ffd1d1;border-radius:14px;padding:14px;margin-top:12px}
-@media(max-width:720px){.brand h1{font-size:22px}.statusGrid{grid-template-columns:1fr 1fr 1fr;gap:8px}.statusCard{padding:10px;min-height:150px}.truckCard{grid-template-columns:1fr;text-align:center}.truckPic{display:none}.truckInfo h2{font-size:17px}.gauge{width:96px;height:96px}.gaugeInner{width:70px;height:70px;font-size:28px}.clockBig{font-size:24px}.money{font-size:28px}.moduleGrid{grid-template-columns:repeat(5,1fr);gap:8px}.module{min-height:118px;padding:8px 5px}.module .emoji{font-size:32px}.module strong{font-size:12px}.module span{font-size:10px}.dataGrid{grid-template-columns:1fr 1fr 1fr}.statusStrip{grid-template-columns:repeat(4,1fr)}.stripItem{font-size:10px;padding:9px;gap:5px}}
-@media(max-width:520px){.main{padding:10px}.brand h1{font-size:18px}.brand p{font-size:8px}.logoBox{width:44px;height:44px}.statusGrid{grid-template-columns:1fr 1.15fr 1fr}.statusCard h3{font-size:12px}.clockBig{font-size:22px;padding:11px 7px}.money{font-size:26px}.moduleGrid{grid-template-columns:repeat(3,1fr)}.module{min-height:128px}.dataGrid{grid-template-columns:1fr}.statusStrip{grid-template-columns:1fr 1fr}.askText h2{font-size:20px}.askText p{font-size:12px}.activeBar{font-size:11px}}
+
+@media(max-width:520px){
+  header{padding:14px}
+  .brand h1{font-size:18px}
+  .brand p{font-size:8px}
+  .nav-icon{width:44px;height:44px}
+  .status-marquee{font-size:11px;margin:10px 14px 0}
+  .dashboard-container{padding:14px;gap:14px}
+  .top-row-panels{gap:8px}
+  .diagnostic-card{padding:10px;border-radius:14px}
+  .digital-timer{font-size:19px}
+  .earnings-amount{font-size:24px}
+  .truck-render-container{display:none}
+  .truck-identity{font-size:15px}
+  .radial-progress-container{width:72px;height:72px}
+  .apps-matrix-grid{grid-template-columns:repeat(3,1fr)}
+  .matrix-item{min-height:122px}
+  .info-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
 <div class="app">
-  <div class="topbar">
-    <div class="header">
-      <div class="leftHead">
-        <div class="iconBtn" onclick="openPanel('settingsPanel')">☰</div>
-        <div class="logoBox">⚙️</div>
-        <div class="brand"><h1>ROLLING <span>WRENCH</span> AI</h1><p>DIESEL DIAGNOSTICS & REPAIR PLATFORM</p></div>
+
+<header>
+  <button class="nav-icon" onclick="openPanel('settingsPanel')">☰</button>
+  <div class="brand">
+    <h1>Rolling Wrench <span>AI</span></h1>
+    <p>Diesel Diagnostics & Repair Platform</p>
+  </div>
+  <div class="header-actions">
+    <span class="badge-count">3</span>
+    <button class="nav-icon">🔔</button>
+    <button class="nav-icon" onclick="openPanel('settingsPanel')">⚙️</button>
+  </div>
+</header>
+
+<section class="status-marquee">
+  <div class="indicator-dot"></div>
+  <span>ACTIVE TRUCK</span>
+  <span class="marquee-muted">CUMMINS X15</span>
+  <span class="marquee-muted">VIN: 1XP4D49X8KD123456</span>
+  <span class="connected">🔗 CONNECTED</span>
+</section>
+
+<main class="dashboard-container">
+
+  <div class="top-row-panels">
+    <div class="diagnostic-card">
+      <div class="card-title">Time Clock</div>
+      <div class="status-pill" id="clockState">● STOPPED</div>
+      <div class="digital-timer clockDisplay">00:00:00</div>
+      <div class="earnings-box">
+        <p>Today's Earnings</p>
+        <div class="earnings-amount earningsDisplay">$0.00</div>
       </div>
-      <div class="rightHead"><div class="iconBtn">🔔<div class="badge">3</div></div><div class="iconBtn" onclick="openPanel('settingsPanel')">⚙️</div></div>
+      <button class="btn-action-outline" onclick="toggleClock()" id="clockBtn">Clock In</button>
     </div>
-    <div class="activeBar"><div class="dot"></div><b>ACTIVE TRUCK</b><div class="sep"></div><span>CUMMINS X15</span><div class="sep"></div><span>VIN: 1XP4D49X8KD123456</span><span class="connected">🔗 CONNECTED</span></div>
+
+    <div class="diagnostic-card">
+      <div class="card-title" style="color:var(--orange)">Active Truck</div>
+      <div class="truck-identity">2020 Freightliner Cascadia 126</div>
+      <div class="truck-render-container"><div class="truck-render-placeholder">🚛</div></div>
+      <div class="specs-grid">
+        <div class="spec-item"><span>VIN</span>1XP4D4...</div>
+        <div class="spec-item"><span>ENGINE</span>CUMMINS X15</div>
+        <div class="spec-item"><span>Odometer</span>453,218 mi</div>
+        <div class="spec-item"><span>Hours</span>8,912 HRS</div>
+      </div>
+      <button class="btn-action-outline" onclick="openPanel('vinPanel')">Truck Profile</button>
+    </div>
+
+    <div class="diagnostic-card">
+      <div class="card-title">System Status</div>
+      <div class="radial-progress-container">
+        <svg class="radial-svg">
+          <circle class="radial-bg" cx="36" cy="36" r="30"></circle>
+          <circle class="radial-fill" cx="36" cy="36" r="30"></circle>
+        </svg>
+        <div class="radial-text">98%</div>
+      </div>
+      <div class="status-summary-text">All Systems Normal ✓</div>
+      <button class="btn-action-outline" onclick="openPanel('statusPanel')">View Details</button>
+    </div>
   </div>
 
-  <main class="main">
-    <section class="statusGrid">
-      <div class="statusCard glass"><h3>Time Clock</h3><div class="smallGreen" id="clockState">● STOPPED</div><div class="clockBig clockDisplay">00:00:00</div><small>Today's Earnings</small><div class="money earningsDisplay">$0.00</div><button class="orangeBtn" onclick="toggleClock()" id="clockBtn">CLOCK IN</button></div>
-      <div class="statusCard glass truckCard"><div class="truckPic">🚛</div><div class="truckInfo"><h3 style="color:var(--orange)">Active Truck</h3><h2>2020 FREIGHTLINER CASCADIA 126</h2><p>VIN: 1XP4D49X8KD123456</p><p>Engine: CUMMINS X15</p><p>CPL: 4342</p><p>Odometer: 453,218 mi</p><p>Hours: 8,912 HRS</p><button class="orangeBtn" onclick="openPanel('vinPanel')">TRUCK PROFILE</button></div></div>
-      <div class="statusCard glass"><h3>System Status</h3><div class="gaugeWrap"><div class="gauge"><div class="gaugeInner">98%</div></div><div class="smallGreen" style="text-align:center;margin-top:8px">All Systems Normal ✔</div></div><button class="orangeBtn" style="margin-top:12px" onclick="openPanel('statusPanel')">VIEW DETAILS</button></div>
-    </section>
+  <section class="ask-ai-banner" onclick="openPanel('aiPanel')">
+    <div class="ai-identity">
+      <div class="ai-avatar">RW</div>
+      <div class="ai-meta">
+        <h2>Ask Rolling Wrench AI...</h2>
+        <p>VIN lookup, parts, fault codes, repair steps, quotes, invoices, and job history.</p>
+      </div>
+    </div>
+    <div class="voice-mic-container">🎙️</div>
+  </section>
 
-    <section class="askBox" onclick="openPanel('aiPanel')"><div class="rwCircle">RW</div><div class="askText"><h2>Ask Rolling Wrench AI...</h2><p>VIN lookup, parts, fault codes, repair steps, quotes, invoices, and job history.</p></div><div class="askIcon">🎙️</div><div class="askIcon">⋮</div></section>
-    <section class="masterSearch"><div class="mag">⌕</div><input id="masterInput" placeholder="Search VIN, Part #, Symptoms, Fault Codes, Repairs..." onkeydown="if(event.key==='Enter')masterSearch()" /><div class="scan" onclick="openPanel('cameraPanel')">▥</div></section>
+  <section class="master-search-container">
+    <span class="search-icon-left">🔍</span>
+    <input id="masterInput" type="text" placeholder="Search VIN, Part #, Symptoms, Fault Codes..." onkeydown="if(event.key==='Enter')masterSearch()">
+    <span class="barcode-icon-right" onclick="openPanel('cameraPanel')">║▌║</span>
+  </section>
 
-    <section class="moduleGrid">
-      <div class="module" onclick="openPanel('vinPanel')"><div class="emoji">🚚</div><strong>VIN LOOKUP</strong><span>Decode VIN, ESN, CPL & more</span></div>
-      <div class="module" onclick="openPanel('partsPanel')"><div class="emoji">⚙️📦</div><strong>OEM PARTS</strong><span>Search OEM parts & diagrams</span></div>
-      <div class="module" onclick="openPanel('faultPanel')"><div class="emoji">🩺</div><strong>FAULT DOCTOR</strong><span>AI powered fault diagnostics</span></div>
-      <div class="module" onclick="openPanel('repairPanel')"><div class="emoji">🛠️</div><strong>REPAIR HUB</strong><span>Step-by-step repair guidance</span></div>
-      <div class="module" onclick="openPanel('quotePanel')"><div class="emoji">📜💰</div><strong>SMART QUOTES</strong><span>Create quotes & estimates</span></div>
-      <div class="module" onclick="openPanel('workPanel')"><div class="emoji">📋</div><strong>WORK ORDERS</strong><span>Create, manage & track jobs</span></div>
-      <div class="module" onclick="openPanel('invoicePanel')"><div class="emoji">📄</div><strong>INVOICES</strong><span>Create invoices & send</span></div>
-      <div class="module" onclick="openPanel('clockPanel')"><div class="emoji">🕘</div><strong>TIME CLOCK</strong><span>Track time, jobs & labor</span></div>
-      <div class="module" onclick="openPanel('cameraPanel')"><div class="emoji">📷</div><strong>CAMERA / OCR</strong><span>Scan codes, parts & documents</span></div>
-      <div class="module" onclick="openPanel('dotPanel')"><div class="emoji">📍</div><strong>DOT / GPS</strong><span>GPS, routes, ELD & location</span></div>
-      <div class="module" onclick="openPanel('memoryPanel')"><div class="emoji">🧠</div><strong>REPAIR MEMORY</strong><span>Saved repairs, history & notes</span></div>
-      <div class="module" onclick="openPanel('suppliersPanel')"><div class="emoji">🤝</div><strong>SUPPLIERS</strong><span>Parts suppliers & contacts</span></div>
-      <div class="module" onclick="openPanel('aiPanel')"><div class="emoji">🤖</div><strong>AI ASSISTANT</strong><span>Ask AI for help, advice & more</span></div>
-      <div class="module" onclick="openPanel('reportsPanel')"><div class="emoji">📊</div><strong>REPORTS</strong><span>Analytics & performance</span></div>
-      <div class="module" onclick="openPanel('settingsPanel')"><div class="emoji">⚙️</div><strong>SETTINGS</strong><span>App settings & preferences</span></div>
-    </section>
+  <section class="apps-matrix-grid">
+    <div class="matrix-item" onclick="openPanel('vinPanel')"><div class="matrix-icon-wrapper">🚚</div><h3>VIN Lookup</h3><p>Decode VIN, ESN, CPL</p></div>
+    <div class="matrix-item" onclick="openPanel('partsPanel')"><div class="matrix-icon-wrapper">⚙️</div><h3>OEM Parts</h3><p>Search OEM parts</p></div>
+    <div class="matrix-item" onclick="openPanel('faultPanel')"><div class="matrix-icon-wrapper">🩺</div><h3>Fault Doctor</h3><p>Fault codes & fixes</p></div>
+    <div class="matrix-item" onclick="openPanel('repairPanel')"><div class="matrix-icon-wrapper">🔧</div><h3>Repair Guides</h3><p>Step-by-step repairs</p></div>
+    <div class="matrix-item" onclick="openPanel('quotePanel')"><div class="matrix-icon-wrapper">📄</div><h3>Smart Quotes</h3><p>Quotes & estimates</p></div>
+    <div class="matrix-item" onclick="openPanel('workPanel')"><div class="matrix-icon-wrapper">📋</div><h3>Work Orders</h3><p>Jobs & customers</p></div>
+    <div class="matrix-item" onclick="openPanel('clockPanel')"><div class="matrix-icon-wrapper">🕒</div><h3>Time Clock</h3><p>Track time & labor</p></div>
+    <div class="matrix-item" onclick="openPanel('cameraPanel')"><div class="matrix-icon-wrapper">📷</div><h3>Vision / OCR</h3><p>Scan & extract text</p></div>
+    <div class="matrix-item" onclick="openPanel('memoryPanel')"><div class="matrix-icon-wrapper">🗄️</div><h3>Repair Memory</h3><p>Saved fixes & notes</p></div>
+    <div class="matrix-item" onclick="openPanel('reportsPanel')"><div class="matrix-icon-wrapper">📊</div><h3>Reports</h3><p>Analytics & reports</p></div>
+    <div class="matrix-item" onclick="openPanel('invoicePanel')"><div class="matrix-icon-wrapper">💵</div><h3>Invoices</h3><p>Build invoices</p></div>
+    <div class="matrix-item" onclick="openPanel('dotPanel')"><div class="matrix-icon-wrapper">📍</div><h3>DOT / GPS</h3><p>Inspections & route</p></div>
+  </section>
 
-    <section class="dataGrid">
-      <div class="dataCard glass"><div class="dataHead"><h3>⚠ TOP FAULTS TODAY</h3><a>View All</a></div><div class="faultRow"><div><b>P2009</b><small>DPF Differential Pressure</small></div><div class="count">4</div></div><div class="faultRow"><div><b>SPN 157</b><small>EGR Position Sensor</small></div><div class="count">3</div></div><div class="faultRow"><div><b>SPN 111 FMI 5</b><small>Coolant Temperature High</small></div><div class="count">2</div></div><div class="faultRow"><div><b>U0101</b><small>Lost Comm w/ ECM</small></div><div class="count">1</div></div></div>
-      <div class="dataCard glass"><div class="dataHead"><h3>RECENT WORK ORDERS</h3><a>View All</a></div><div class="woRow"><div><b>WO-10045</b><small>DPF Cleaning</small></div><div class="progress">IN PROGRESS</div></div><div class="woRow"><div><b>WO-10044</b><small>EGR Valve Replacement</small></div><div class="complete">COMPLETE</div></div><div class="woRow"><div><b>WO-10043</b><small>Coolant Temp Sensor</small></div><div class="complete">COMPLETE</div></div></div>
-      <div class="dataCard glass"><div class="dataHead"><h3>EARNINGS SUMMARY</h3><a>This Week⌄</a></div><div class="money">$3,842.50</div><small>Total Earnings</small><div class="bars"><div class="bar" style="height:38%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:45%"></div><div class="bar" style="height:62%"></div><div class="bar" style="height:78%"></div><div class="bar" style="height:95%"></div><div class="bar gray" style="height:32%"></div></div><button class="orangeBtn" onclick="openPanel('reportsPanel')">VIEW REPORTS</button></div>
-    </section>
-    <section class="statusStrip"><div class="stripItem">⚙️ GATEWAY <span>CONNECTED</span><div class="ok"></div></div><div class="stripItem">🧠 AI SYSTEM <span>ONLINE</span><div class="ok"></div></div><div class="stripItem">☁️ SUPABASE <span>SYNCED</span><div class="ok"></div></div><div class="stripItem">ᛒ BLUETOOTH <span>CONNECTED</span><div class="ok"></div></div></section>
-  </main>
+  <section class="info-grid">
+    <div class="info-card"><h3>⚠ Top Faults Today</h3><p>P2009 — DPF Differential Pressure</p><p>SPN 157 — EGR Position Sensor</p><p>U0101 — Lost Comm w/ ECM</p></div>
+    <div class="info-card"><h3>Recent Work Orders</h3><p>WO-10045 <span class="orange">IN PROGRESS</span></p><p>WO-10044 <span class="green">COMPLETE</span></p><p>WO-10043 <span class="green">COMPLETE</span></p></div>
+    <div class="info-card"><h3>Earnings Summary</h3><div class="earnings-amount">$3,842.50</div><p>This Week</p></div>
+  </section>
+
+</main>
 </div>
 
-<nav class="bottomNav"><div class="navInner"><div class="navItem active"><span class="navIcon">⌂</span>HOME</div><div class="navItem" onclick="openPanel('faultPanel')"><span class="navIcon">🩺</span>DOCTOR</div><div class="navItem" onclick="openPanel('partsPanel')"><span class="navIcon">⚙️</span>PARTS</div><div class="navItem" onclick="openPanel('repairPanel')"><span class="navIcon">🛠️</span>REPAIR</div><div class="navItem" onclick="openPanel('settingsPanel')"><span class="navIcon">•••</span>MORE</div></div></nav>
+<nav class="bottom-nav-bar">
+  <div class="nav-tab active"><span class="nav-tab-icon">🏠</span><label>Home</label></div>
+  <div class="nav-tab" onclick="openPanel('faultPanel')"><span class="nav-tab-icon">🩺</span><label>Doctor</label></div>
+  <div class="nav-tab" onclick="openPanel('partsPanel')"><span class="nav-tab-icon">⚙️</span><label>Parts</label></div>
+  <div class="nav-tab" onclick="openPanel('repairPanel')"><span class="nav-tab-icon">🔧</span><label>Repair</label></div>
+  <div class="nav-tab" onclick="openPanel('settingsPanel')"><span class="nav-tab-icon">•••</span><label>More</label></div>
+</nav>
 
 <div id="vinPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>VIN Lookup</h1><p>Decode VIN, ESN, CPL, engine, odometer, and truck profile.</p><div class="formBox"><input id="vin" placeholder="VIN" value="1XP4D49X8KD123456"><input id="engine" placeholder="Engine" value="Cummins X15"><input id="esn" placeholder="ESN"><input id="cpl" placeholder="CPL" value="4342"><button class="fullBtn" onclick="vinLookup()">DECODE VIN</button><div class="output" id="vinOut">Ready.</div></div></div>
 
@@ -136,7 +498,7 @@ textarea{min-height:110px}.actionRow{display:grid;grid-template-columns:1fr 1fr;
 
 <div id="faultPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Fault Doctor</h1><p>SPN/FMI diagnostic builder and repair path.</p><div class="formBox"><input id="spn" placeholder="SPN / Code"><input id="fmi" placeholder="FMI"><textarea id="symptom" placeholder="Complaint, symptoms, freeze frame, live data"></textarea><div class="actionRow"><button class="fullBtn" onclick="faultDoctor()">DIAGNOSE</button><button class="darkBtn" onclick="openPanel('regenPanel')">REGEN TEST</button></div><div class="output" id="faultOut">Ready for diagnostic input.</div></div></div>
 
-<div id="repairPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Repair Hub</h1><p>Step-by-step repair procedure generator.</p><div class="formBox"><textarea id="repairRequest" placeholder="Example: Replace DD15 EGR delta pressure sensor"></textarea><button class="fullBtn" onclick="repairHub()">BUILD REPAIR STEPS</button><div class="output" id="repairOut">Enter repair request.</div></div></div>
+<div id="repairPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Repair Guides</h1><p>Step-by-step repair procedure generator.</p><div class="formBox"><textarea id="repairRequest" placeholder="Example: Replace DD15 EGR delta pressure sensor"></textarea><button class="fullBtn" onclick="repairHub()">BUILD REPAIR STEPS</button><div class="output" id="repairOut">Enter repair request.</div></div></div>
 
 <div id="quotePanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Smart Quotes</h1><p>Build estimate with service call, labor, parts, tax, and notes.</p><div class="formBox"><input id="qCustomer" placeholder="Customer"><input id="qJob" placeholder="Job / Unit"><input id="qService" type="number" value="250" placeholder="Service call"><input id="qRate" type="number" value="135" placeholder="Hourly rate"><input id="qHours" type="number" value="0" placeholder="Hours"><input id="qTax" type="number" value="7" placeholder="Tax %"><input id="qCard" type="number" value="3" placeholder="Card fee %"><textarea id="qNotes" placeholder="Quote notes"></textarea><button class="fullBtn" onclick="buildQuote()">BUILD QUOTE</button><div class="output" id="quoteOut">Quote ready.</div></div></div>
 
@@ -144,20 +506,13 @@ textarea{min-height:110px}.actionRow{display:grid;grid-template-columns:1fr 1fr;
 
 <div id="workPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Work Orders</h1><div class="formBox"><input id="woCustomer" placeholder="Customer"><input id="woUnit" placeholder="Unit / VIN"><textarea id="woComplaint" placeholder="Complaint"></textarea><textarea id="woCause" placeholder="Cause"></textarea><textarea id="woCorrection" placeholder="Correction"></textarea><button class="fullBtn" onclick="buildWO()">BUILD WORK ORDER</button><div class="output" id="woOut">Work order ready.</div></div></div>
 
-<div id="clockPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveTimeEntry()">SAVE TIME</button></div><h1>Time Clock</h1><p>Employee time, pause/resume, job labor, service call, and live billing.</p><div class="formBox"><label>Employee</label><select id="employeeSelect"><option>James</option><option>Stephani</option><option>David</option><option>New Employee</option></select><input id="newEmployee" placeholder="Add employee name"><input id="clockJob" placeholder="Job / Customer / Unit"><input id="clockRate" type="number" value="135" placeholder="Hourly rate"><input id="clockServiceCall" type="number" value="250" placeholder="Service call"><div class="clockBig clockDisplay">00:00:00</div><div class="money earningsDisplay">$0.00</div><div class="actionRow"><button class="fullBtn" onclick="startClock()">START</button><button class="darkBtn" onclick="pauseClock()">PAUSE</button></div><div class="actionRow"><button class="fullBtn" onclick="resumeClock()">RESUME</button><button class="darkBtn" onclick="stopClock()">STOP</button></div><button class="darkBtn" style="width:100%" onclick="resetClock()">RESET</button><div class="output" id="clockOut">Ready.</div></div></div>
+<div id="clockPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveTimeEntry()">SAVE TIME</button></div><h1>Time Clock</h1><p>Employee time, pause/resume, job labor, service call, and live billing.</p><div class="formBox"><label>Employee</label><select id="employeeSelect"><option>James</option><option>Stephani</option><option>David</option><option>New Employee</option></select><input id="newEmployee" placeholder="Add employee name"><input id="clockJob" placeholder="Job / Customer / Unit"><input id="clockRate" type="number" value="135" placeholder="Hourly rate"><input id="clockServiceCall" type="number" value="250" placeholder="Service call"><div class="digital-timer clockDisplay">00:00:00</div><div class="earnings-amount earningsDisplay">$0.00</div><div class="actionRow"><button class="fullBtn" onclick="startClock()">START</button><button class="darkBtn" onclick="pauseClock()">PAUSE</button></div><div class="actionRow"><button class="fullBtn" onclick="resumeClock()">RESUME</button><button class="darkBtn" onclick="stopClock()">STOP</button></div><button class="darkBtn" style="width:100%" onclick="resetClock()">RESET</button><div class="output" id="clockOut">Ready.</div></div></div>
 
-<div id="cameraPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Camera / OCR</h1><p>Phone camera capture for parts, labels, fault screens, and documents.</p><div class="formBox"><input type="file" accept="image/*" capture="environment"><textarea placeholder="Ask AI about the image or type the visible number here"></textarea><button class="fullBtn">SCAN / ANALYZE</button><div class="output">Camera input ready. Backend OCR/vision connects later.</div></div></div>
+<div id="cameraPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Vision / OCR</h1><p>Phone camera capture for parts, labels, fault screens, and documents.</p><div class="formBox"><input type="file" accept="image/*" capture="environment"><textarea placeholder="Ask AI about the image or type the visible number here"></textarea><button class="fullBtn">SCAN / ANALYZE</button><div class="output">Camera input ready. Backend OCR/vision connects later.</div></div></div>
 
 <div id="dotPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>DOT / GPS</h1><div class="formBox"><textarea id="dotNotes" placeholder="DOT inspection notes"></textarea><button class="fullBtn" onclick="dotReport()">BUILD DOT REPORT</button><div class="output" id="dotOut">DOT checklist ready.</div></div></div>
 
 <div id="memoryPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Repair Memory</h1><div class="formBox"><textarea id="memoryNote" placeholder="Save fix, VIN, symptoms, parts, repair result"></textarea><button class="fullBtn" onclick="memorySave()">SAVE MEMORY</button><div class="output" id="memoryOut">No memory saved yet.</div></div></div>
-
-<div id="suppliersPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Suppliers</h1><div class="formBox"><div class="output">NAPA
-O'Reilly
-FleetPride
-TruckPro
-Rush Truck Centers
-Local dealer / OEM parts counter</div></div></div>
 
 <div id="aiPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Rolling Wrench AI</h1><div class="formBox"><textarea id="aiAsk" placeholder="Ask anything: fault, part, quote, repair steps, invoice, customer message"></textarea><button class="fullBtn" onclick="askAI()">ASK AI</button><div class="output" id="aiOut">AI front-end shell ready. Backend hooks later.</div></div></div>
 
@@ -167,7 +522,7 @@ Open Jobs: 3
 Top Fault: DPF Differential Pressure
 Best Day: Saturday</div></div></div>
 
-<div id="settingsPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Settings</h1><div class="formBox"><input id="shopName" value="Rolling Wrench Diesel" placeholder="Shop name"><input id="shopPhone" value="260-502-6222" placeholder="Phone"><input id="defaultRate" type="number" value="135" placeholder="Default labor rate"><input id="defaultCall" type="number" value="250" placeholder="Default service call"><div class="output">Settings saved locally on this phone/browser.</div></div></div>
+<div id="settingsPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>Settings</h1><div class="formBox"><label>Shop Name</label><input id="shopName" value="Rolling Wrench Diesel"><label>Phone</label><input id="shopPhone" value="260-502-6222"><label>Default Labor Rate</label><input id="defaultRate" type="number" value="135"><label>Default Service Call</label><input id="defaultCall" type="number" value="250"><div class="output">Settings saved locally on this phone/browser.</div></div></div>
 
 <div id="statusPanel" class="panel"><div class="panelTop"><button class="backBtn" onclick="closePanels()">← BACK</button><button class="saveBtn" onclick="saveLocal()">SAVE</button></div><h1>System Status</h1><div class="formBox"><div class="output">Gateway: CONNECTED
 AI System: ONLINE
@@ -181,41 +536,42 @@ Health: 98%</div></div></div>
 <script>
 const AppState={clock:{running:false,startTime:0,elapsed:0,timer:null,rate:135},quote:{partsList:[],partsTotal:0},activeTruck:{vin:"1XP4D49X8KD123456",engine:"CUMMINS X15",cpl:"4342",makeModel:"2020 FREIGHTLINER CASCADIA 126"}};
 const $=id=>document.getElementById(id);
-const formatMoney=amount=>`$${Number(amount||0).toFixed(2)}`;
+const formatMoney=a=>`$${Number(a||0).toFixed(2)}`;
 
-function openPanel(panelId){document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));const target=$(panelId);if(target){target.classList.add("show");onPanelOpen(panelId);}}
+function openPanel(id){document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));const t=$(id);if(t){t.classList.add("show");onPanelOpen(id);}}
 function closePanels(){document.querySelectorAll(".panel").forEach(p=>p.classList.remove("show"));}
-function onPanelOpen(panelId){
-  if(panelId==="vinPanel"){if(!$("vin").value)$("vin").value=AppState.activeTruck.vin;if(!$("engine").value)$("engine").value=AppState.activeTruck.engine;if(!$("cpl").value)$("cpl").value=AppState.activeTruck.cpl;}
-  if(panelId==="quotePanel"||panelId==="invoicePanel"){const activeRate=Number($("defaultRate")?.value||135);if($("qRate"))$("qRate").value=activeRate;if($("iRate"))$("iRate").value=activeRate;if($("qJob"))$("qJob").value=AppState.activeTruck.makeModel;if($("iUnit"))$("iUnit").value=AppState.activeTruck.makeModel;}
+function onPanelOpen(id){
+  if(id==="quotePanel"||id==="invoicePanel"){
+    const r=Number($("defaultRate")?.value||135);
+    if($("qRate"))$("qRate").value=r;
+    if($("iRate"))$("iRate").value=r;
+    if($("qJob"))$("qJob").value=AppState.activeTruck.makeModel;
+    if($("iUnit"))$("iUnit").value=AppState.activeTruck.makeModel;
+  }
 }
-function saveLocal(){
-  const saveData={shopName:$("shopName")?.value||"Rolling Wrench Diesel",shopPhone:$("shopPhone")?.value||"260-502-6222",defaultRate:$("defaultRate")?.value||135,defaultCall:$("defaultCall")?.value||250,activeTruck:AppState.activeTruck,quote:AppState.quote,clock:{elapsed:AppState.clock.elapsed,rate:AppState.clock.rate},savedAt:new Date().toISOString()};
-  localStorage.setItem("rwd_app_save",JSON.stringify(saveData));alert("Saved on this phone/browser.");
-}
+function saveLocal(){localStorage.setItem("rwd_app_save",JSON.stringify({activeTruck:AppState.activeTruck,quote:AppState.quote,clock:{elapsed:AppState.clock.elapsed,rate:AppState.clock.rate},savedAt:new Date().toISOString()}));alert("Saved on this phone/browser.");}
+
 function toggleClock(){AppState.clock.running?stopClock():startClock();}
-function startClock(){if(AppState.clock.running)return;AppState.clock.running=true;AppState.clock.startTime=Date.now()-AppState.clock.elapsed;AppState.clock.timer=setInterval(updateClock,1000);if($("clockState")){$("clockState").innerText="● ON THE CLOCK";$("clockState").style.color="var(--orange)";}if($("clockBtn"))$("clockBtn").innerText="CLOCK OUT";updateClock();}
-function pauseClock(){if(!AppState.clock.running)return;AppState.clock.running=false;clearInterval(AppState.clock.timer);if($("clockState")){$("clockState").innerText="● PAUSED";$("clockState").style.color="var(--yellow)";}if($("clockOut"))$("clockOut").innerText+="\n\nPAUSED";}
+function startClock(){if(AppState.clock.running)return;AppState.clock.running=true;AppState.clock.startTime=Date.now()-AppState.clock.elapsed;AppState.clock.timer=setInterval(updateClock,1000);if($("clockState")){$("clockState").innerText="● ON THE CLOCK";$("clockState").classList.add("active");}if($("clockBtn"))$("clockBtn").innerText="Clock Out";updateClock();}
+function pauseClock(){if(!AppState.clock.running)return;AppState.clock.running=false;clearInterval(AppState.clock.timer);if($("clockState"))$("clockState").innerText="● PAUSED";if($("clockOut"))$("clockOut").innerText+="\n\nPAUSED";}
 function resumeClock(){startClock();}
-function stopClock(){AppState.clock.running=false;clearInterval(AppState.clock.timer);if($("clockState")){$("clockState").innerText="● STOPPED";$("clockState").style.color="var(--green)";}if($("clockBtn"))$("clockBtn").innerText="CLOCK IN";if($("clockOut"))$("clockOut").innerText+="\n\nSTOPPED / READY TO SAVE";updateClock();}
-function resetClock(){clearInterval(AppState.clock.timer);AppState.clock.running=false;AppState.clock.elapsed=0;if($("clockState")){$("clockState").innerText="● STOPPED";$("clockState").style.color="var(--green)";}if($("clockBtn"))$("clockBtn").innerText="CLOCK IN";updateClock();}
+function stopClock(){AppState.clock.running=false;clearInterval(AppState.clock.timer);if($("clockState")){$("clockState").innerText="● STOPPED";$("clockState").classList.remove("active");}if($("clockBtn"))$("clockBtn").innerText="Clock In";if($("clockOut"))$("clockOut").innerText+="\n\nSTOPPED / READY TO SAVE";updateClock();}
+function resetClock(){clearInterval(AppState.clock.timer);AppState.clock.running=false;AppState.clock.elapsed=0;if($("clockState")){$("clockState").innerText="● STOPPED";$("clockState").classList.remove("active");}if($("clockBtn"))$("clockBtn").innerText="Clock In";updateClock();}
 function updateClock(){
   if(AppState.clock.running)AppState.clock.elapsed=Date.now()-AppState.clock.startTime;
-  const totalSeconds=Math.floor(AppState.clock.elapsed/1000);
-  const h=String(Math.floor(totalSeconds/3600)).padStart(2,"0"),m=String(Math.floor((totalSeconds%3600)/60)).padStart(2,"0"),s=String(totalSeconds%60).padStart(2,"0");
-  const timeString=`${h}:${m}:${s}`;
+  const sec=Math.floor(AppState.clock.elapsed/1000),h=String(Math.floor(sec/3600)).padStart(2,"0"),m=String(Math.floor((sec%3600)/60)).padStart(2,"0"),s=String(sec%60).padStart(2,"0");
+  const time=`${h}:${m}:${s}`;
   AppState.clock.rate=Number($("clockRate")?.value||$("defaultRate")?.value||135);
   const earned=(AppState.clock.elapsed/3600000)*AppState.clock.rate;
-  document.querySelectorAll(".clockDisplay").forEach(d=>d.innerText=timeString);
+  document.querySelectorAll(".clockDisplay").forEach(e=>e.innerText=time);
   document.querySelectorAll(".earningsDisplay").forEach(e=>e.innerText=formatMoney(earned));
-  if($("clockOut"))$("clockOut").innerText=`${timeString}\nLIVE LABOR: ${formatMoney(earned)} @ ${formatMoney(AppState.clock.rate)}/hr`;
+  if($("clockOut"))$("clockOut").innerText=`${time}\nLIVE LABOR: ${formatMoney(earned)} @ ${formatMoney(AppState.clock.rate)}/hr`;
 }
 function saveTimeEntry(){
   const employee=$("newEmployee")?.value.trim()||$("employeeSelect")?.value||"Employee";
   const job=$("clockJob")?.value||"No job entered";
-  const rate=Number($("clockRate")?.value||135),serviceCall=Number($("clockServiceCall")?.value||250),hours=AppState.clock.elapsed/3600000,labor=hours*rate,total=serviceCall+labor;
-  const entry={employee,job,hours,rate,serviceCall,labor,total,date:new Date().toISOString()};
-  localStorage.setItem("rwd_time_entry_"+Date.now(),JSON.stringify(entry));
+  const rate=Number($("clockRate")?.value||135),call=Number($("clockServiceCall")?.value||250),hours=AppState.clock.elapsed/3600000,labor=hours*rate,total=call+labor;
+  localStorage.setItem("rwd_time_entry_"+Date.now(),JSON.stringify({employee,job,hours,rate,call,labor,total,date:new Date().toISOString()}));
   $("clockOut").innerText=`TIME ENTRY SAVED
 
 Employee: ${employee}
@@ -224,94 +580,69 @@ Job: ${job}
 Hours: ${hours.toFixed(2)}
 Rate: ${formatMoney(rate)}
 Labor: ${formatMoney(labor)}
-Service Call: ${formatMoney(serviceCall)}
+Service Call: ${formatMoney(call)}
 
 TOTAL BILLABLE: ${formatMoney(total)}`;
 }
-function faultDoctor(){
-  const spn=parseInt($("spn").value,10),fmi=parseInt($("fmi").value,10),complaint=$("symptom").value,out=$("faultOut");
-  if(!spn){out.innerText="Enter an SPN or fault code first.";return;}
-  let componentTarget="Generic Engine Parameter Controller Module",isolationPath="1. Verify complaint.\n2. Check power, ground, and connector condition.\n3. Inspect harness rub points.\n4. Compare live data to OEM spec.";
-  if(spn===3251||complaint.toLowerCase().includes("dpf")){componentTarget="DPF Differential Pressure Subsystem";isolationPath="1. Verify 5V reference and ground.\n2. Inspect differential pressure tubes for soot/moisture blockage.\n3. KOEO sensor zero check.\n4. Confirm regen data and pressure readings.";}
-  if(spn===27||spn===412||complaint.toLowerCase().includes("egr")){componentTarget="EGR Valve / Position Subsystem";isolationPath="1. Command EGR sweep with scan tool.\n2. Check connector and actuator wiring.\n3. Inspect soot binding.\n4. Verify feedback matches commanded position.";}
-  const fmiContext=fmi===3?"Voltage above normal":fmi===4?"Voltage below normal":fmi===5?"Open circuit / current low":`FMI ${fmi||"N/A"}`;
-  out.innerText=`ROLLING WRENCH FAULT DOCTOR
 
-TARGET SYSTEM: ${componentTarget}
-ROOT CONDITION: ${fmiContext}
-NOTES: ${complaint||"None"}
-
-DIAGNOSTIC PATH:
-${isolationPath}
-
-Finish: repair cause, clear faults, road test, confirm fix.`;
-}
 function partsLookup(){
-  const query=$("partQuery").value.trim().toUpperCase(),out=$("partsOut");
-  if(!query){out.innerText="Enter OEM part number, filter number, component, or fault code.";return;}
-  const catalog={"P2009":{desc:"DPF Differential Pressure Sensor Assembly",price:184.50,cross:"Cummins 4384112"},"SPN 157":{desc:"EGR Position Sensor Kit",price:342.00,cross:"Detroit A010153"},"CUMMINS X15":{desc:"Fleetguard Fuel/Water Separator",price:89.95,cross:"Fleetguard FS1098"}};
-  let matched=catalog[query]||Object.keys(catalog).map(k=>query.includes(k)||k.includes(query)?catalog[k]:null).find(Boolean);
-  if(!matched)matched={desc:`Special Order Component (${query})`,price:125,cross:"Manual verify required"};
-  out.dataset.stagedPrice=matched.price;out.dataset.stagedDesc=matched.desc;
+  const q=$("partQuery").value.trim().toUpperCase(),out=$("partsOut");
+  if(!q){out.innerText="Enter OEM part number, filter number, component, or fault code.";return;}
+  const catalog={"P2009":{desc:"DPF Differential Pressure Sensor Assembly",price:184.50,cross:"Cummins 4384112"},"SPN 157":{desc:"EGR Position Sensor Kit",price:342,cross:"Detroit A010153"},"CUMMINS X15":{desc:"Fleetguard Fuel/Water Separator",price:89.95,cross:"Fleetguard FS1098"}};
+  let match=catalog[q]||Object.keys(catalog).map(k=>q.includes(k)||k.includes(q)?catalog[k]:null).find(Boolean)||{desc:`Special Order Component (${q})`,price:125,cross:"Manual verify required"};
+  out.dataset.stagedPrice=match.price;out.dataset.stagedDesc=match.desc;
   out.innerText=`PART IDENTIFIED / STAGED
 
-Item: ${matched.desc}
-Price: ${formatMoney(matched.price)}
-Cross Ref: ${matched.cross}
+Item: ${match.desc}
+Price: ${formatMoney(match.price)}
+Cross Ref: ${match.cross}
 
 Status: ready to add to quote/invoice.`;
 }
 function addPart(){
-  const out=$("partsOut"),price=parseFloat(out.dataset.stagedPrice||0),desc=out.dataset.stagedDesc||"Maintenance Core Item";
+  const out=$("partsOut"),price=Number(out.dataset.stagedPrice||0),desc=out.dataset.stagedDesc||"Maintenance Core Item";
   if(!price){alert("Search a part first.");return;}
   AppState.quote.partsList.push({description:desc,price,qty:1});
   AppState.quote.partsTotal=AppState.quote.partsList.reduce((s,i)=>s+(i.price*i.qty),0);
-  if($("qParts"))$("qParts").value=AppState.quote.partsTotal.toFixed(2);
   out.innerText+=`\n\nADDED: ${desc} - ${formatMoney(price)}\nParts Total: ${formatMoney(AppState.quote.partsTotal)}`;
 }
 function addManualPart(){
   const desc=$("manualPartDesc").value||"Manual Part",price=Number($("manualPartPrice").value||0),qty=Number($("manualPartQty").value||1);
   AppState.quote.partsList.push({description:desc,price,qty});
   AppState.quote.partsTotal=AppState.quote.partsList.reduce((s,i)=>s+(i.price*i.qty),0);
-  if($("qParts"))$("qParts").value=AppState.quote.partsTotal.toFixed(2);
   $("partsOut").innerText=`MANUAL PART ADDED
 
 ${qty} x ${desc} @ ${formatMoney(price)}
 Parts Total: ${formatMoney(AppState.quote.partsTotal)}`;
 }
+
 function buildQuote(){
-  const customer=$("qCustomer").value||"Customer",job=$("qJob").value||AppState.activeTruck.makeModel,service=Number($("qService").value||0),rate=Number($("qRate").value||0),hours=Number($("qHours").value||0),labor=rate*hours,parts=AppState.quote.partsTotal,taxRate=Number($("qTax").value||0)/100,cardRate=Number($("qCard").value||0)/100,subtotal=service+labor+parts,tax=parts*taxRate,card=(subtotal+tax)*cardRate,total=subtotal+tax+card;
+  const service=Number($("qService").value||0),rate=Number($("qRate").value||0),hours=Number($("qHours").value||0),labor=rate*hours,parts=AppState.quote.partsTotal,tax=parts*(Number($("qTax").value||0)/100),subtotal=service+labor+parts+tax,card=subtotal*(Number($("qCard").value||0)/100),total=subtotal+card;
   $("quoteOut").innerText=`ROLLING WRENCH DIESEL
 OFFICIAL ESTIMATE
 
-Customer: ${customer}
-Unit / Job: ${job}
-Date: ${new Date().toLocaleDateString()}
+Customer: ${$("qCustomer").value||"Customer"}
+Unit / Job: ${$("qJob").value||AppState.activeTruck.makeModel}
 
 Service Call: ${formatMoney(service)}
 Labor: ${hours.toFixed(2)} hrs @ ${formatMoney(rate)} = ${formatMoney(labor)}
 Parts: ${formatMoney(parts)}
-Tax on Parts: ${formatMoney(tax)}
+Tax: ${formatMoney(tax)}
 Card Fee: ${formatMoney(card)}
 
 PARTS:
 ${AppState.quote.partsList.map((p,i)=>`${i+1}. ${p.qty||1} x ${p.description} - ${formatMoney((p.price||0)*(p.qty||1))}`).join("\n")||"No parts added"}
 
-Notes:
-${$("qNotes").value||"N/A"}
-
-ESTIMATED TOTAL: ${formatMoney(total)}`;
+TOTAL: ${formatMoney(total)}`;
 }
 function buildInvoice(){
-  const customer=$("iCustomer").value||"Customer",phone=$("iPhone").value||"N/A",unit=$("iUnit").value||AppState.activeTruck.makeModel,service=Number($("iService").value||$("defaultCall")?.value||250),rate=Number($("iRate").value||$("defaultRate")?.value||135);
-  const hours=$("iHours").value?Number($("iHours").value):(AppState.clock.elapsed/3600000);
-  const labor=hours*rate,parts=AppState.quote.partsTotal,tax=parts*(Number($("iTax").value||0)/100),subtotal=service+labor+parts+tax,card=subtotal*(Number($("iCard").value||0)/100),total=subtotal+card;
+  const service=Number($("iService").value||250),rate=Number($("iRate").value||135),hours=$("iHours").value?Number($("iHours").value):(AppState.clock.elapsed/3600000),labor=hours*rate,parts=AppState.quote.partsTotal,tax=parts*(Number($("iTax").value||0)/100),subtotal=service+labor+parts+tax,card=subtotal*(Number($("iCard").value||0)/100),total=subtotal+card;
   $("invoiceOut").innerText=`ROLLING WRENCH DIESEL
 OFFICIAL REPAIR INVOICE
 
-Customer: ${customer}
-Phone: ${phone}
-Unit: ${unit}
+Customer: ${$("iCustomer").value||"Customer"}
+Phone: ${$("iPhone").value||"N/A"}
+Unit: ${$("iUnit").value||AppState.activeTruck.makeModel}
 Date: ${new Date().toLocaleString()}
 
 WORK PERFORMED:
@@ -324,52 +655,53 @@ Parts: ${formatMoney(parts)}
 Sales Tax: ${formatMoney(tax)}
 Card Fee: ${formatMoney(card)}
 
-PARTS:
-${AppState.quote.partsList.map((p,i)=>`${i+1}. ${p.qty||1} x ${p.description} - ${formatMoney((p.price||0)*(p.qty||1))}`).join("\n")||"No parts added"}
-
 TOTAL DUE: ${formatMoney(total)}
 
 Thank you for choosing Rolling Wrench Diesel.
 260-502-6222`;
 }
-function repairHub(){
-  const req=$("repairRequest").value||"General repair";
-  $("repairOut").innerText=`REPAIR PROCEDURE
 
-Request: ${req}
+function faultDoctor(){const spn=$("spn").value,fmi=$("fmi").value,n=$("symptom").value;$("faultOut").innerText=`ROLLING WRENCH FAULT DOCTOR
 
-1. Verify complaint and unit information.
-2. Pull active/inactive codes.
-3. Inspect wiring, connectors, mounts, and related components.
-4. Remove failed component safely.
-5. Install replacement parts and seals.
+SPN / CODE: ${spn||"N/A"}
+FMI: ${fmi||"N/A"}
+
+NOTES:
+${n||"N/A"}
+
+PATH:
+1. Verify complaint.
+2. Pull active/inactive faults.
+3. Inspect power, ground, connector, and harness.
+4. Compare live data to OEM spec.
+5. Repair cause, clear faults, road test.`;}
+function repairHub(){$("repairOut").innerText=`REPAIR PROCEDURE
+
+Request:
+${$("repairRequest").value||"General repair"}
+
+1. Verify truck and complaint.
+2. Review safety lockout.
+3. Inspect component and harness.
+4. Remove failed component.
+5. Install new part/seals.
 6. Torque to OEM spec.
 7. Clear faults.
-8. Run functional test.
-9. Road test.
-10. Save notes to Repair Memory.`;
-}
-function vinLookup(){
-  const vin=$("vin").value.trim().toUpperCase();if(vin.length<17){$("vinOut").innerText="VIN must be 17 characters.";return;}
-  AppState.activeTruck.vin=vin;AppState.activeTruck.engine=$("engine").value.toUpperCase();AppState.activeTruck.cpl=$("cpl").value;
-  $("vinOut").innerText=`VIN PROFILE
+8. Test and save notes.`;}
+function vinLookup(){AppState.activeTruck.vin=$("vin").value;$("vinOut").innerText=`VIN PROFILE
 
-VIN: ${vin}
-Engine: ${AppState.activeTruck.engine}
+VIN: ${$("vin").value}
+Engine: ${$("engine").value}
 ESN: ${$("esn").value||"Not entered"}
-CPL: ${AppState.activeTruck.cpl||"Not entered"}
+CPL: ${$("cpl").value||"Not entered"}
 
-Saved as active truck.`;
-}
-function askAI(){
-  const q=$("aiAsk").value;$("aiOut").innerText=q?`ROLLING WRENCH AI
+Saved as active truck.`;}
+function askAI(){$("aiOut").innerText=`ROLLING WRENCH AI
 
 Question:
-${q}
+${$("aiAsk").value||"N/A"}
 
-Front-end shell registered the request.
-Backend phase will connect Supabase, repair memory, live web verification, manuals, and parts lookup.`:"Ask a question first.";
-}
+Front-end shell registered the request. Backend hooks later.`;}
 function buildWO(){$("woOut").innerText=`WORK ORDER
 
 Customer: ${$("woCustomer").value||"N/A"}
@@ -385,37 +717,13 @@ Correction:
 ${$("woCorrection").value||"N/A"}`;}
 function dotReport(){$("dotOut").innerText=`DOT / GPS REPORT
 
-Inspection Notes:
-${$("dotNotes").value||"N/A"}
-
-Lights:
-Brakes:
-Tires:
-Suspension:
-Steering:
-Air System:
-Frame:
-Trailer:
-GPS / Location:`;}
-function memorySave(){let note=$("memoryNote").value||"No note entered.";localStorage.setItem("rwd_memory_"+Date.now(),note);$("memoryOut").innerText="Saved repair memory:\n\n"+note;}
+${$("dotNotes").value||"N/A"}`;}
+function memorySave(){localStorage.setItem("rwd_memory_"+Date.now(),$("memoryNote").value||"");$("memoryOut").innerText="Saved repair memory.";}
 function regenReport(){$("regenOut").innerText=`FORCED REGEN LOG
 
-Truck: ${AppState.activeTruck.makeModel}
-Engine: ${AppState.activeTruck.engine}
-
-Notes:
-${$("regenNotes").value||"N/A"}
-
-Safety:
-- Engine running confirmed
-- Area clear
-- Temps monitored
-- Faults documented
-- Result saved`;}
-function masterSearch(){const q=$("masterInput").value;openPanel("aiPanel");$("aiAsk").value=q;askAI();}
+${$("regenNotes").value||"N/A"}`;}
+function masterSearch(){openPanel("aiPanel");$("aiAsk").value=$("masterInput").value;askAI();}
 function copyText(id){navigator.clipboard.writeText($(id).innerText);alert("Copied.");}
-
-window.openPanel=openPanel;window.closePanels=closePanels;window.saveLocal=saveLocal;window.toggleClock=toggleClock;window.startClock=startClock;window.pauseClock=pauseClock;window.resumeClock=resumeClock;window.stopClock=stopClock;window.resetClock=resetClock;window.saveTimeEntry=saveTimeEntry;window.vinLookup=vinLookup;window.partsLookup=partsLookup;window.addPart=addPart;window.addManualPart=addManualPart;window.faultDoctor=faultDoctor;window.repairHub=repairHub;window.buildQuote=buildQuote;window.buildInvoice=buildInvoice;window.askAI=askAI;window.buildWO=buildWO;window.dotReport=dotReport;window.memorySave=memorySave;window.regenReport=regenReport;window.masterSearch=masterSearch;window.copyText=copyText;
 updateClock();
 </script>
 </body>
