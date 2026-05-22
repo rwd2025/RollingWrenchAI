@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#05080d" />
+  <title>Rolling Wrench AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="plate"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <button class="icon-btn">☰</button>
+      <div>
+        <div class="brand">ROLLING WRENCH AI</div>
+        <div class="subbrand">Mobile Diesel Command Center</div>
+      </div>
+      <button class="icon-btn">⚙</button>
+    </header>
+
+    <section class="hero-card">
+      <div class="truck-badge">
+        <div class="truck-art">▰▰▰</div>
+        <div class="glow-line"></div>
+      </div>
+      <div class="truck-profile">
+        <div class="eyebrow">ACTIVE TRUCK PROFILE</div>
+        <h1>2019 International LT</h1>
+        <p>A26 • VIN 3HSDZTZR5KN536244</p>
+        <div class="chips"><span>EPA17</span><span>Forced Regen Ready</span><span>Shop Mode</span></div>
+      </div>
+    </section>
+
+    <section class="search-stack">
+      <label class="search-bar"><span>Ask AI</span><input placeholder="Ask Rolling Wrench AI a repair question..." /></label>
+      <label class="search-bar"><span>VIN</span><input placeholder="Decode VIN / save truck profile" /></label>
+      <label class="search-bar"><span>Parts</span><input placeholder="OEM, filter, brake, sensor, cross-reference" /></label>
+      <label class="search-bar"><span>Master</span><input placeholder="Search jobs, invoices, faults, notes, parts" /></label>
+    </section>
+
+    <section class="status-row">
+      <div><b>Live Rate</b><span>$135/hr</span></div>
+      <div><b>Service Call</b><span>$250</span></div>
+      <div><b>Mode</b><span>Field</span></div>
+    </section>
+
+    <section class="grid">
+      <button class="module active" data-panel="ai"><b>Rolling Wrench AI</b><span>Diagnostics, repair steps, procedures</span></button>
+      <button class="module" data-panel="vin"><b>VIN / Truck Profile</b><span>Year, make, engine, ESN, CPL</span></button>
+      <button class="module" data-panel="parts"><b>Parts Lookup</b><span>OEM verify, cross refs, kits</span></button>
+      <button class="module" data-panel="regen"><b>Forced Regen</b><span>Checklist, temps, safety, notes</span></button>
+      <button class="module" data-panel="clock"><b>Live Job Clock</b><span>Start, pause, stop multiple jobs</span></button>
+      <button class="module" data-panel="invoice"><b>Quote / Invoice</b><span>Labor, service call, tax, card fee</span></button>
+      <button class="module" data-panel="camera"><b>Camera Parts</b><span>Read part numbers from photos</span></button>
+      <button class="module" data-panel="maps"><b>GPS Pin Drop</b><span>Roadside job location notes</span></button>
+    </section>
+
+    <section class="panel" id="panel">
+      <div class="panel-head"><button id="backBtn">← Back</button><h2 id="panelTitle">Rolling Wrench AI</h2><button id="clearBtn">Clear</button></div>
+      <textarea id="panelInput" placeholder="Type complaint, code, symptom, or job note..."></textarea>
+      <div class="action-row">
+        <button id="runBtn">Run Check</button>
+        <button id="copyBtn">Copy</button>
+        <button id="invoiceBtn">Add Invoice</button>
+      </div>
+      <pre id="output">Ready. This demo is front-end only, but the buttons and panels are wired for phone testing.</pre>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
