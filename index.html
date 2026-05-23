@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Rolling Wrench AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Rolling Wrench Diesel</p>
+        <h1>Rolling Wrench AI</h1>
+      </div>
+      <button class="icon-btn" id="settingsBtn">⚙</button>
+    </header>
+
+    <main id="view-home" class="view active">
+      <section class="hero-card metal-card">
+        <div class="truck-badge">
+          <div class="truck-art">▰▰▰</div>
+          <span class="status-dot"></span>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow orange">Active Truck Profile</p>
+          <h2 id="activeTruckTitle">No truck loaded</h2>
+          <p id="activeTruckSub">VIN / ESN / CPL ready for lookup</p>
+        </div>
+      </section>
+
+      <section class="stacked-searches">
+        <div class="search-bar ask">
+          <span>🤖</span>
+          <input id="askInput" placeholder="Ask Rolling Wrench AI..." />
+          <button onclick="askAI()">ASK</button>
+        </div>
+        <div class="search-bar">
+          <span>🔎</span>
+          <input id="masterSearch" placeholder="Master Search: part, fault, VIN, symptom..." />
+          <button onclick="masterSearchRun()">GO</button>
+        </div>
+        <div class="search-bar">
+          <span>🚛</span>
+          <input id="vinInput" placeholder="VIN decode / truck profile" maxlength="17" />
+          <button onclick="saveTruck()">SAVE</button>
+        </div>
+      </section>
+
+      <section class="quick-grid">
+        <button onclick="showView('ai')">Rolling Wrench AI</button>
+        <button onclick="showView('parts')">Parts Lookup</button>
+        <button onclick="showView('faults')">Fault Codes</button>
+        <button onclick="showView('clock')">Job Clock</button>
+        <button onclick="showView('invoice')">Invoice</button>
+        <button onclick="showView('services')">Service Tools</button>
+      </section>
+
+      <section class="readout metal-card">
+        <div class="readout-head">
+          <span>TOP FAULT READOUT</span>
+          <b id="faultCount">0 active</b>
+        </div>
+        <div id="activityLog" class="log-line">System ready. Load a truck or start a job.</div>
+      </section>
+    </main>
+
+    <main id="view-ai" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Rolling Wrench AI</h2>
+      <div class="chat-box" id="chatBox"><p><b>AI:</b> Ask diagnostics, parts, PM, regen, quote, or repair steps.</p></div>
+      <div class="search-bar ask bottom-input"><input id="chatInput" placeholder="Type to AI..."/><button onclick="chatSend()">SEND</button></div>
+    </main>
+
+    <main id="view-parts" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Parts Lookup</h2>
+      <div class="tool-card"><input id="partInput" placeholder="OEM / Fleetguard / Baldwin / Bendix number"/><button onclick="partLookup()">Verify Part</button></div>
+      <div id="partResult" class="result-card">Enter a part number to start exact-match lookup demo.</div>
+    </main>
+
+    <main id="view-faults" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Fault Codes</h2>
+      <div class="two-col"><input id="spn" placeholder="SPN"/><input id="fmi" placeholder="FMI"/></div>
+      <button class="wide" onclick="faultLookup()">Build Diagnostic Path</button>
+      <div id="faultResult" class="result-card">SPN/FMI demo logic ready.</div>
+    </main>
+
+    <main id="view-clock" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Multi-Job Clock</h2>
+      <div class="clock-controls"><button onclick="addJob()">+ Add Job</button><button onclick="clearJobs()">Clear All</button></div>
+      <div id="jobs"></div>
+    </main>
+
+    <main id="view-invoice" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Invoice Builder</h2>
+      <div class="tool-card form-grid">
+        <input id="laborHours" type="number" step="0.1" placeholder="Labor hours"/>
+        <input id="laborRate" type="number" value="135" placeholder="Hourly rate"/>
+        <input id="serviceCall" type="number" value="250" placeholder="Service call"/>
+        <input id="partsCost" type="number" placeholder="Parts"/>
+        <button onclick="calcInvoice()">Calculate</button>
+      </div>
+      <div id="invoiceResult" class="result-card">Invoice total will show here.</div>
+    </main>
+
+    <main id="view-services" class="view module-view">
+      <button class="back" onclick="showView('home')">← Back</button>
+      <h2>Service Tools</h2>
+      <div class="service-list">
+        <button>Forced Regen Checklist</button>
+        <button>DOT Inspection Notes</button>
+        <button>PM Filter / Fluid Lookup</button>
+        <button>Repair Notes</button>
+        <button>Photo / OCR Part Capture</button>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button onclick="showView('home')">Home</button>
+      <button onclick="showView('ai')">Ask</button>
+      <button onclick="showView('clock')">Clock</button>
+      <button onclick="showView('invoice')">Invoice</button>
+    </nav>
+  </div>
+<script src="app.js"></script>
+</body>
+</html>
